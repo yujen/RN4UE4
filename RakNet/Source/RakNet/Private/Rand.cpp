@@ -61,6 +61,12 @@
 #define loBits(u)      ((u) & 0x7FFFFFFFU)   // mask  the highest   bit of u
 #define mixBits(u, v)  (hiBit(u)|loBits(v))  // move hi bit of u to hi bit of v
 
+
+#if __cplusplus > 199711L
+#define register      // Deprecated in C++11.
+#endif  // #if __cplusplus > 199711L
+
+
 static unsigned int _state[ N + 1 ];     // state vector + 1 extra to not violate ANSI C
 static unsigned int *_next;        // next random value is computed from here
 static int _left = -1; // can *next++ this many times before reloading

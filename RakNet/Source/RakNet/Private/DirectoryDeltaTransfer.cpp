@@ -45,7 +45,8 @@ public:
 	{
 		char fullPathToDir[1024];
 
-		if (onFileStruct->fileName && onFileStruct->fileData && subdirLen < strlen(onFileStruct->fileName))
+		//if (onFileStruct->fileName && (onFileStruct->fileData != nullptr) && subdirLen < strlen(onFileStruct->fileName))
+        if ((onFileStruct->fileData != nullptr) && subdirLen < strlen(onFileStruct->fileName))
 		{
 			strcpy(fullPathToDir, outputSubdir);
 			strcat(fullPathToDir, onFileStruct->fileName+subdirLen);
@@ -61,7 +62,8 @@ public:
 	{
 		char fullPathToDir[1024];
 
-		if (fps->onFileStruct->fileName && subdirLen < strlen(fps->onFileStruct->fileName))
+		//if (fps->onFileStruct->fileName && subdirLen < strlen(fps->onFileStruct->fileName))
+        if (subdirLen < strlen(fps->onFileStruct->fileName))
 		{
 			strcpy(fullPathToDir, outputSubdir);
 			strcat(fullPathToDir, fps->onFileStruct->fileName+subdirLen);
