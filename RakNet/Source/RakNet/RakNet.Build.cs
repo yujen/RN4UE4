@@ -23,6 +23,9 @@ namespace UnrealBuildTool.Rules
 				new string[]
 				{
 					"Core",
+                    //"UnrealEd",
+                    //"LevelEditor",
+                    //"Slate",
 					// ... add other public dependencies that you statically link with here ...
 				}
 				);
@@ -30,8 +33,11 @@ namespace UnrealBuildTool.Rules
 			PrivateDependencyModuleNames.AddRange(
 				new string[]
 				{
-                   "Core",
-                   "Engine",
+                    "Core",
+                    "Engine",
+                    "UnrealEd",
+                    "LevelEditor",
+                    "Slate",
 					// ... add private dependencies that you statically link with here ...
 				}
 				);
