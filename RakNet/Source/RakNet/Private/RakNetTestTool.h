@@ -26,7 +26,7 @@ public:
     
     
     void OnWindowMenuExtension(FMenuBuilder& MenuBuilder);
-    void OnMyToolMenu();
+    void OnRakNetTestToolMenu();
     
     
 private:

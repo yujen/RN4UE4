@@ -11,46 +11,46 @@
 
 
 
-IMPLEMENT_MODULE( FRakNetTestTool, RakNetTestTool );
+IMPLEMENT_MODULE(FRakNetTestTool, RakNetTestTool);
 
 
 void FRakNetTestTool::StartupModule()
 {
-    if(IsRunningCommandlet()){ return; }
-    
-    Extender = MakeShareable(new FExtender);
-    Extender->AddMenuExtension(
-                               "WindowLocalTabSpawners",
-                               EExtensionHook::After,
-                               NULL,
-                               FMenuExtensionDelegate::CreateRaw(this, &FRakNetTestTool::OnWindowMenuExtension)
-                               );
-    FLevelEditorModule& LevelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor");
-    LevelEditorModule.GetMenuExtensibilityManager()->AddExtender(Extender);
+	if (IsRunningCommandlet()) { return; }
+
+	Extender = MakeShareable(new FExtender);
+	Extender->AddMenuExtension(
+		"General",
+		EExtensionHook::After,
+		NULL,
+		FMenuExtensionDelegate::CreateRaw(this, &FRakNetTestTool::OnWindowMenuExtension)
+		);
+	FLevelEditorModule& LevelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor");
+	LevelEditorModule.GetMenuExtensibilityManager()->AddExtender(Extender);
 }
 
 void FRakNetTestTool::ShutdownModule()
 {
-    if(Extender.IsValid() && FModuleManager::Get().IsModuleLoaded("LevelEditor"))
-    {
-        FLevelEditorModule& LevelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor");
-        LevelEditorModule.GetMenuExtensibilityManager()->RemoveExtender(Extender);
-    }
+	if (Extender.IsValid() && FModuleManager::Get().IsModuleLoaded("LevelEditor"))
+	{
+		FLevelEditorModule& LevelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor");
+		LevelEditorModule.GetMenuExtensibilityManager()->RemoveExtender(Extender);
+	}
 }
 
 
 void FRakNetTestTool::OnWindowMenuExtension(FMenuBuilder& MenuBuilder)
 {
-    MenuBuilder.BeginSection("MyMenuHook", LOCTEXT("MyMenu", "MyMenu"));
-    MenuBuilder.AddMenuEntry(
-                             LOCTEXT("MyMenuTitle", "MyMenuTitle"),
-                             LOCTEXT("MyMenuToolTip", "hello..."),
-                             FSlateIcon(),
-                             FUIAction(FExecuteAction::CreateRaw(this, &FRakNetTestTool::OnMyToolMenu)));
-    MenuBuilder.EndSection();
+	MenuBuilder.BeginSection("RakNetHook", LOCTEXT("RakNet", "RakNet"));
+	MenuBuilder.AddMenuEntry(
+		LOCTEXT("RakNetTestTool", "RakNetTestTool"),
+		LOCTEXT("RakNetTestToolTip", "RakNetTestTool"),
+		FSlateIcon(),
+		FUIAction(FExecuteAction::CreateRaw(this, &FRakNetTestTool::OnRakNetTestToolMenu)));
+	MenuBuilder.EndSection();
 }
 
-void FRakNetTestTool::OnMyToolMenu()
+void FRakNetTestTool::OnRakNetTestToolMenu()
 {
 }
 

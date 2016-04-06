@@ -10,7 +10,7 @@ class FRakNet : public IRakNet
 	virtual void ShutdownModule() override;
 };
 
-IMPLEMENT_MODULE( FRakNet, RakNet )
+//IMPLEMENT_MODULE( FRakNet, RakNet )
 
 
 
