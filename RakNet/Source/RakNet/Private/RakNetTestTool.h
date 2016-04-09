@@ -9,6 +9,9 @@
 #include "ModuleManager.h"
 
 
+DECLARE_LOG_CATEGORY_EXTERN(LogRakNetTestTool, Log, All);
+
+
 class FRakNetTestTool : public IRakNet
 {
 public:
@@ -26,8 +29,9 @@ public:
     
     
     void OnWindowMenuExtension(FMenuBuilder& MenuBuilder);
-    void OnRakNetTestToolMenu();
-    
+
+    void OnRakNetPingServer();
+	void OnRakNetPingClient();
     
 private:
     

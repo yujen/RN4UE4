@@ -12,6 +12,7 @@
 
 
 IMPLEMENT_MODULE(FRakNetTestTool, RakNetTestTool);
+DEFINE_LOG_CATEGORY(LogRakNetTestTool);
 
 
 void FRakNetTestTool::StartupModule()
@@ -43,17 +44,29 @@ void FRakNetTestTool::OnWindowMenuExtension(FMenuBuilder& MenuBuilder)
 {
 	MenuBuilder.BeginSection("RakNetHook", LOCTEXT("RakNet", "RakNet"));
 	MenuBuilder.AddMenuEntry(
-		LOCTEXT("RakNetTestTool", "RakNetTestTool"),
-		LOCTEXT("RakNetTestToolTip", "RakNetTestTool"),
+		LOCTEXT("PingServer", "PingServer"),
+		LOCTEXT("PingServerTip", "PingServerTip"),
 		FSlateIcon(),
-		FUIAction(FExecuteAction::CreateRaw(this, &FRakNetTestTool::OnRakNetTestToolMenu)));
+		FUIAction(FExecuteAction::CreateRaw(this, &FRakNetTestTool::OnRakNetPingServer)));
+	MenuBuilder.AddMenuEntry(
+		LOCTEXT("PingClient", "PingClient"),
+		LOCTEXT("PingClientTip", "PingClientTip"),
+		FSlateIcon(),
+		FUIAction(FExecuteAction::CreateRaw(this, &FRakNetTestTool::OnRakNetPingClient)));
 	MenuBuilder.EndSection();
 }
 
-void FRakNetTestTool::OnRakNetTestToolMenu()
+void FRakNetTestTool::OnRakNetPingServer()
 {
+	UE_LOG(LogRakNetTestTool, Log, TEXT("OnRakNetPingServer"));
+
 }
 
+void FRakNetTestTool::OnRakNetPingClient()
+{
+	UE_LOG(LogRakNetTestTool, Log, TEXT("OnRakNetPingClient"));
+
+}
 
 
 #undef LOCTEXT_NAMESPACE
