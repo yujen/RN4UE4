@@ -1,4 +1,4 @@
-// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.
+﻿// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.
 
 
 #ifndef ____RakNetTestTool__
@@ -36,6 +36,9 @@ public:
 private:
     
     TSharedPtr<FExtender> Extender;
+
+	bool enableServer;
+	RakNet::RakPeerInterface* server;
     
 };
 
