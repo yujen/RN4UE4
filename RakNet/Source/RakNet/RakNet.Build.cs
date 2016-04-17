@@ -9,15 +9,16 @@ namespace UnrealBuildTool.Rules
 			PublicIncludePaths.AddRange(
 				new string[] {
 					// ... add public include paths required here ...
-				}
+                    "RakNet/Public",
+                }
 				);
 
 			PrivateIncludePaths.AddRange(
 				new string[] {
-					"RakNet/Private",
 					// ... add other private include paths required here ...
-				}
-				);
+                    //"RakNet/Private",
+                }
+                );
 
 			PublicDependencyModuleNames.AddRange(
 				new string[]
@@ -26,8 +27,9 @@ namespace UnrealBuildTool.Rules
                     //"UnrealEd",
                     //"LevelEditor",
                     //"Slate",
-					// ... add other public dependencies that you statically link with here ...
-				}
+					// ... add other public dependencies that you statically link with here ...                    
+                    "RakNet",
+                }
 				);
 
 			PrivateDependencyModuleNames.AddRange(
@@ -39,7 +41,8 @@ namespace UnrealBuildTool.Rules
                     "LevelEditor",
                     "Slate",
 					// ... add private dependencies that you statically link with here ...
-				}
+                    //"RakNet",
+                }
 				);
 
 			DynamicallyLoadedModuleNames.AddRange(
