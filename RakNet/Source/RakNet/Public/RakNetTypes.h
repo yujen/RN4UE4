@@ -150,6 +150,7 @@ struct RAK_DLL_EXPORT SocketDescriptor
 	SocketDescriptor();
 	SocketDescriptor(unsigned short _port, const char *_hostAddress);
 
+
 	/// The local port to bind to.  Pass 0 to have the OS autoassign a port.
 	unsigned short port;
 

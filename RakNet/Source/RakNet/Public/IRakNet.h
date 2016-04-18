@@ -36,3 +36,10 @@ public:
 	}
 };
 
+struct RAKNET_API TestStr
+{
+	TestStr() {}
+
+	int testfunc() { return 999; }
+
+};

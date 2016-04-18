@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2014, Oculus VR, Inc.
  *  All rights reserved.
  *
@@ -13,7 +13,7 @@
 #if defined(_WIN32) && !(defined(__GNUC__)  || defined(__GCCXML__)) && !defined(_RAKNET_LIB) && defined(_RAKNET_DLL)
 #define RAK_DLL_EXPORT __declspec(dllexport)
 #else
-#define RAK_DLL_EXPORT  
+#define RAK_DLL_EXPORT RAKNET_API 
 #endif
 
 #define STATIC_FACTORY_DECLARATIONS(x) static x* GetInstance(void); \

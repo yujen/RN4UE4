@@ -93,7 +93,9 @@ SocketDescriptor::SocketDescriptor() {
 #else
 	blockingSocket=true;
 #endif
-	port=0; hostAddress[0]=0; remotePortRakNetWasStartedOn_PS3_PSP2=0; extraSocketOptions=0; socketFamily=AF_INET;}
+	port=0; hostAddress[0]=0; remotePortRakNetWasStartedOn_PS3_PSP2=0; extraSocketOptions=0; socketFamily=AF_INET;
+}
+
 SocketDescriptor::SocketDescriptor(unsigned short _port, const char *_hostAddress)
 {
 	#ifdef __native_client__
@@ -110,6 +112,7 @@ SocketDescriptor::SocketDescriptor(unsigned short _port, const char *_hostAddres
 	extraSocketOptions=0;
 	socketFamily=AF_INET;
 }
+
 
 // Defaults to not in peer to peer mode for NetworkIDs.  This only sends the localSystemAddress portion in the BitStream class
 // This is what you want for client/server, where the server assigns all NetworkIDs and it is unnecessary to transmit the full structure.
