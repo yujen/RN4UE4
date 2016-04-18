@@ -193,8 +193,17 @@ extern bool NonNumericHostString( const char *host );
 /// Use RakNetGUID for a unique per-instance of RakPeer to identify systems
 struct RAK_DLL_EXPORT SystemAddress
 {
-	/// Constructors
-	SystemAddress();
+	/// Constructors, we implement default constructor here for UNASSIGNED_SYSTEM_ADDRESS
+	//SystemAddress();
+	SystemAddress()
+	{
+		address.addr4.sin_family = AF_INET;
+		// used for operator ==
+		memset(&address, 0, sizeof(address)); address.addr4.sin_family = AF_INET;
+		systemIndex = (SystemIndex)-1;
+		debugPort = 0;
+	};
+
 	SystemAddress(const char *str);
 	SystemAddress(const char *str, unsigned short port);
 
@@ -313,6 +322,7 @@ struct RAK_DLL_EXPORT SystemAddress
 		void ToString_New(bool writePort, char *dest, char portDelineator) const;
 #endif
 };
+
 
 /// Uniquely identifies an instance of RakPeer. Use RakPeer::GetGuidFromSystemAddress() and RakPeer::GetSystemAddressFromGuid() to go between SystemAddress and RakNetGUID
 /// Use RakPeer::GetGuidFromSystemAddress(UNASSIGNED_SYSTEM_ADDRESS) to get your own GUID
@@ -504,4 +514,4 @@ struct RAK_DLL_EXPORT uint24_t
 
 } // namespace RakNet
 
-#endif
+#endif	// __NETWORK_TYPES_H
