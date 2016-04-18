@@ -29,7 +29,7 @@ namespace DataStructures
 {
 
 template <class structureType>
-class RAK_DLL_EXPORT ThreadsafeAllocatingQueue
+class ThreadsafeAllocatingQueue
 {
 public:
 	// Queue operations

@@ -28,7 +28,7 @@ namespace DataStructures
 {
 	/// \brief A queue implemented as an array with a read and write index.
 	template <class queue_type>
-	class RAK_DLL_EXPORT Queue
+	class Queue
 	{
 	public:
 		Queue();

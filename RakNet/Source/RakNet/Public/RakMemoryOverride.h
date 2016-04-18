@@ -79,7 +79,7 @@ namespace RakNet
 {
 
 	template <class Type>
-	RAK_DLL_EXPORT Type* OP_NEW(const char *file, unsigned int line)
+	Type* OP_NEW(const char *file, unsigned int line)
 	{
 #if _USE_RAK_MEMORY_OVERRIDE==1
 		char *buffer = (char *) (GetMalloc_Ex())(sizeof(Type), file, line);
@@ -93,7 +93,7 @@ namespace RakNet
 	}
 
 	template <class Type, class P1>
-	RAK_DLL_EXPORT Type* OP_NEW_1(const char *file, unsigned int line, const P1 &p1)
+	Type* OP_NEW_1(const char *file, unsigned int line, const P1 &p1)
 	{
 #if _USE_RAK_MEMORY_OVERRIDE==1
 		char *buffer = (char *) (GetMalloc_Ex())(sizeof(Type), file, line);
@@ -107,7 +107,7 @@ namespace RakNet
 	}
 
 	template <class Type, class P1, class P2>
-	RAK_DLL_EXPORT Type* OP_NEW_2(const char *file, unsigned int line, const P1 &p1, const P2 &p2)
+	Type* OP_NEW_2(const char *file, unsigned int line, const P1 &p1, const P2 &p2)
 	{
 #if _USE_RAK_MEMORY_OVERRIDE==1
 		char *buffer = (char *) (GetMalloc_Ex())(sizeof(Type), file, line);
@@ -121,7 +121,7 @@ namespace RakNet
 	}
 
 	template <class Type, class P1, class P2, class P3>
-	RAK_DLL_EXPORT Type* OP_NEW_3(const char *file, unsigned int line, const P1 &p1, const P2 &p2, const P3 &p3)
+	Type* OP_NEW_3(const char *file, unsigned int line, const P1 &p1, const P2 &p2, const P3 &p3)
 	{
 #if _USE_RAK_MEMORY_OVERRIDE==1
 		char *buffer = (char *) (GetMalloc_Ex())(sizeof(Type), file, line);
@@ -135,7 +135,7 @@ namespace RakNet
 	}
 
 	template <class Type, class P1, class P2, class P3, class P4>
-	RAK_DLL_EXPORT Type* OP_NEW_4(const char *file, unsigned int line, const P1 &p1, const P2 &p2, const P3 &p3, const P4 &p4)
+	Type* OP_NEW_4(const char *file, unsigned int line, const P1 &p1, const P2 &p2, const P3 &p3, const P4 &p4)
 	{
 #if _USE_RAK_MEMORY_OVERRIDE==1
 		char *buffer = (char *) (GetMalloc_Ex())(sizeof(Type), file, line);
@@ -150,7 +150,7 @@ namespace RakNet
 
 
 	template <class Type>
-	RAK_DLL_EXPORT Type* OP_NEW_ARRAY(const int count, const char *file, unsigned int line)
+	Type* OP_NEW_ARRAY(const int count, const char *file, unsigned int line)
 	{
 		if (count==0)
 			return 0;
@@ -174,7 +174,7 @@ namespace RakNet
 	}
 
 	template <class Type>
-	RAK_DLL_EXPORT void OP_DELETE(Type *buff, const char *file, unsigned int line)
+	void OP_DELETE(Type *buff, const char *file, unsigned int line)
 	{
 #if _USE_RAK_MEMORY_OVERRIDE==1
 		if (buff==0) return;
@@ -189,7 +189,7 @@ namespace RakNet
 	}
 
 	template <class Type>
-	RAK_DLL_EXPORT void OP_DELETE_ARRAY(Type *buff, const char *file, unsigned int line)
+	void OP_DELETE_ARRAY(Type *buff, const char *file, unsigned int line)
 	{
 #if _USE_RAK_MEMORY_OVERRIDE==1
 		if (buff==0)
