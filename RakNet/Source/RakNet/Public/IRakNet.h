@@ -35,11 +35,3 @@ public:
 		return FModuleManager::Get().IsModuleLoaded( "RakNet" );
 	}
 };
-
-struct RAKNET_API TestStr
-{
-	TestStr() {}
-
-	int testfunc() { return 999; }
-
-};
