@@ -13,7 +13,7 @@
 
 #include "RakMemoryOverride.h"
 #include "RakAssert.h"
-//#include <stdlib.h>
+#include <stdlib.h>
 
 #ifdef _RAKNET_SUPPORT_DL_MALLOC
 #include "rdlmalloc.h"
