@@ -74,10 +74,12 @@ using namespace pp;
 
 
 #if   defined(_WIN32)
+
+#include "AllowWindowsPlatformTypes.h"
+
 #include "WSAStartupSingleton.h"
 #include "WindowsIncludes.h"
 #include "Ws2ipdef.h"
-#include "AllowWindowsPlatformTypes.h"
 
 #else
 #include <unistd.h>
