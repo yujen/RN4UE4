@@ -1,4 +1,4 @@
-/**
+﻿/**
 * Original file by the_viking, fixed by R√¥mulo Fernandes, fixed by Emmanuel Nars
 * Should emulate windows finddata structure
 */
