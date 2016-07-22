@@ -1,6 +1,7 @@
 ﻿// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.
 
 
+#if UE_EDITOR
 #include "RakNetPrivatePCH.h"
 #include "RakNetTestTool.h"
 #include "LevelEditor.h"
@@ -229,3 +230,5 @@ void FRakNetTestTool::OnRakNetPingClient()
 
 
 #undef LOCTEXT_NAMESPACE
+
+#endif // UE_EDITOR

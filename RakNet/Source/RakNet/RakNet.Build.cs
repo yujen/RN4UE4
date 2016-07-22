@@ -36,12 +36,8 @@ namespace UnrealBuildTool.Rules
 				new string[]
 				{
                     "Core",
-                    "Engine",
-                    "UnrealEd",
-                    "LevelEditor",
-                    "Slate",
+                    "Engine"
 					// ... add private dependencies that you statically link with here ...
-                    //"RakNet",
                 }
 				);
 
@@ -51,6 +47,17 @@ namespace UnrealBuildTool.Rules
 					// ... add any modules that your module loads dynamically here ...
 				}
 				);
+
+            if(Target.Type == TargetRules.TargetType.Editor)
+            {
+                // These modules are only needed for RakNetTestTool
+                PrivateDependencyModuleNames.AddRange(new string[] {
+                    "LevelEditor",
+                    "UnrealEd",
+                    "Slate"
+                });
+
+            }
 		}
 	}
 }

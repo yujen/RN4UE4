@@ -8,6 +8,10 @@
 #include "IPluginManager.h"
 #include "ModuleManager.h"
 
+namespace RakNet {
+	class RakPeerInterface;
+}
+
 
 DECLARE_LOG_CATEGORY_EXTERN(LogRakNetTestTool, Log, All);
 
