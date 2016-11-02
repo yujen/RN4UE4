@@ -1,0 +1,13 @@
+.vs/
+Binaries/
+Build/
+Config/
+Content/Developers
+Intermediate/
+Plugins/RakNet/Binaries/
+Plugins/RakNet/Intermediate/
+Saved/
+
+RN4UE4.sln
+RN4UE4.VC.db
+RN4UE4.xcworkspace

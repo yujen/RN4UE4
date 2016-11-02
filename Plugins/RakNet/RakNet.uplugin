@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "4.081",
+	"FriendlyName": "RakNet",
+	"Description": "RakNet plugin for UE4",
+	"Category": "Framework",
+	"CreatedBy": "YujenDev",
+	"CreatedByURL": "https://github.com/yujen",
+	"DocsURL": "https://github.com/yujen/RN4UE4",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"EnabledByDefault": false,
+	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "RakNet",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
