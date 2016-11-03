@@ -67,6 +67,9 @@ void APing::Tick( float DeltaTime )
 			FString strData = FString(UTF8_TO_TCHAR(charData));
 			UE_LOG(RN4UE4, Log, TEXT("response string is %s, length is %d "), *strData, strlen(charData));
 
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, strData);
+			OnReceivePingResponse.Broadcast(strData);
+
 		}
 
 		// In this sample since the client is not running a game we can save CPU cycles by

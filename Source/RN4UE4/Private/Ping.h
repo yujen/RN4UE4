@@ -14,6 +14,9 @@
 
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReceivePingResponse, FString, receivedString);
+
+
 UCLASS()
 class APing : public AActor
 {
@@ -43,13 +46,18 @@ public:
 		void ClientPing(const FString& host, const int port);
 
 
+
+	UPROPERTY(BlueprintAssignable, Category = "RakNet|Ping")
+		FOnReceivePingResponse OnReceivePingResponse;
+
+
 private:
 
-	RakNet::RakPeerInterface* server;
-	RakNet::RakPeerInterface* client;
+	RakNet::RakPeerInterface* server = nullptr;
+	RakNet::RakPeerInterface* client = nullptr;
 
 	// Holds packets
-	RakNet::Packet* p;
+	RakNet::Packet* p = nullptr;
 
 	bool waitReceivedData = false;
 
