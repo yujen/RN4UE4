@@ -31,7 +31,7 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "RakNet|Ping")
-		void StartServer(FString responseString);
+		void StartServer(const int listeningPort, const FString& responseString);
 
 	UFUNCTION(BlueprintCallable, Category = "RakNet|Ping")
 		void StopServer();
@@ -40,7 +40,7 @@ public:
 	//	FString serverResponseString;
 
 	UFUNCTION(BlueprintCallable, Category = "RakNet|Ping")
-		void ClientPing();
+		void ClientPing(const FString& host, const int port);
 
 
 private:

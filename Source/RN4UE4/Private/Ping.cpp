@@ -10,7 +10,7 @@ APing::APing()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	UE_LOG(RN4UE4, Log, TEXT("APing::APing"));
+	//UE_LOG(RN4UE4, Log, TEXT("APing::APing"));
 }
 
 // Called when the game starts or when spawned
@@ -19,7 +19,7 @@ void APing::BeginPlay()
 	Super::BeginPlay();
 	
 
-	UE_LOG(RN4UE4, Log, TEXT("APing::BeginPlay"));
+	//UE_LOG(RN4UE4, Log, TEXT("APing::BeginPlay"));
 }
 
 // Called every frame
@@ -89,7 +89,7 @@ void APing::Tick( float DeltaTime )
 }
 
 
-void APing::StartServer(FString responseString)
+void APing::StartServer(const int listeningPort = 8888, const FString& responseString = "")
 {
 	server = RakNet::RakPeerInterface::GetInstance();
 	int i = server->GetNumberOfAddresses();
@@ -104,7 +104,7 @@ void APing::StartServer(FString responseString)
 	server->SetOfflinePingResponse(charString, (const unsigned int)strlen(charString) + 1);
 
 	// The server has to be started to respond to pings.
-	RakNet::SocketDescriptor socketDescriptor(8888, 0);
+	RakNet::SocketDescriptor socketDescriptor(listeningPort, 0);
 	bool b = server->Startup(2, &socketDescriptor, 1) == RakNet::RAKNET_STARTED;
 	server->SetMaximumIncomingConnections(2);
 	if (b)
@@ -125,14 +125,14 @@ void APing::StopServer()
 	//waitReceivedData = false;
 }
 
-void APing::ClientPing()
+void APing::ClientPing(const FString& host = "127.0.0.1", const int port = 8888)
 {
-	UE_LOG(RN4UE4, Log, TEXT("OnRakNetPingClient"));
+	UE_LOG(RN4UE4, Log, TEXT("APing::ClientPing"));
 
 	client = RakNet::RakPeerInterface::GetInstance();
 	RakNet::SocketDescriptor socketDescriptor(0, 0);
 	client->Startup(1, &socketDescriptor, 1);
-	client->Ping("127.0.0.1", 60000, false);
+	client->Ping(TCHAR_TO_ANSI(*host), port, false);
 
 	//waitReceivedData = true;
 
