@@ -6,9 +6,9 @@ public class RN4UE4 : ModuleRules
 {
     public RN4UE4(TargetInfo Target)
     {
-        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "RakNet" });
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "RakNet", });
 
-        PrivateDependencyModuleNames.AddRange(new string[] { });
+        PrivateDependencyModuleNames.AddRange(new string[] { "Core", "Engine", "RakNet", });
 
         //PublicIncludePaths.AddRange(new string[] { "RakNet/Public" });
 

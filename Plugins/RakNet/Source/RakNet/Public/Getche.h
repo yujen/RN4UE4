@@ -9,7 +9,7 @@
  */
 
 #if   defined(_WIN32)
-//#include <conio.h> /* getche() */
+#include <conio.h> /* getche() */
 
 #else
 #include <termios.h>

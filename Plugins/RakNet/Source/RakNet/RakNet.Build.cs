@@ -24,12 +24,14 @@ public class RakNet : ModuleRules
         PublicDependencyModuleNames.AddRange(new string[]
         {
             "Core",
+            //"Engine",
 				// ... add other public dependencies that you statically link with here ...
 		});
 
 
         PrivateDependencyModuleNames.AddRange(new string[]
         {
+            //"Core",
             "CoreUObject",
             "Engine",
 				

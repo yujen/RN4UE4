@@ -97,15 +97,15 @@ public:
 	/// UDPForwarder::Startup(), UDPForwarder::Shutdown(), and UDPForwarder::Update() are called automatically by the plugin
 	UDPForwarder udpForwarder;
 
-	virtual void OnAttach(void);
-	virtual void OnDetach(void);
+	virtual void OnAttach(void) override;
+	virtual void OnDetach(void) override;
 
 	/// \internal
-	virtual void Update(void);
-	virtual PluginReceiveResult OnReceive(Packet *packet);
-	virtual void OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason );
-	virtual void OnRakPeerStartup(void);
-	virtual void OnRakPeerShutdown(void);
+	virtual void Update(void) override;
+	virtual PluginReceiveResult OnReceive(Packet *packet) override;
+	virtual void OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason ) override;
+	virtual void OnRakPeerStartup(void) override;
+	virtual void OnRakPeerShutdown(void) override;
 
 protected:
 	void OnForwardingRequestFromCoordinatorToServer(Packet *packet);

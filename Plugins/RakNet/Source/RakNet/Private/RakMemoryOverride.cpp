@@ -65,6 +65,8 @@ void * (*dlMallocMMap) (size_t size) = RakNet::_DLMallocMMap;
 void * (*dlMallocDirectMMap) (size_t size) = RakNet::_DLMallocDirectMMap;
 int (*dlMallocMUnmap) (void* ptr, size_t size) = RakNet::_DLMallocMUnmap;
 
+
+
 void SetMalloc( void* (*userFunction)(size_t size) )
 {
 	rakMalloc=userFunction;
