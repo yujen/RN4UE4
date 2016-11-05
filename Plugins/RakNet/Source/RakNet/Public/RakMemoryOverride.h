@@ -41,23 +41,17 @@
 // These pointers are statically and globally defined in RakMemoryOverride.cpp
 // Change them to point to your own allocators if you want.
 // Use the functions for a DLL, or just reassign the variable if using source
-#ifdef __cplusplus
-extern "C"
-{
-#endif
 extern RAK_DLL_EXPORT void * (*rakMalloc) (size_t size);
 extern RAK_DLL_EXPORT void * (*rakRealloc) (void *p, size_t size);
 extern RAK_DLL_EXPORT void (*rakFree) (void *p);
 extern RAK_DLL_EXPORT void * (*rakMalloc_Ex) (size_t size, const char *file, unsigned int line);
 extern RAK_DLL_EXPORT void * (*rakRealloc_Ex) (void *p, size_t size, const char *file, unsigned int line);
-extern RAK_DLL_EXPORT void (*rakFree_Ex) (void *p, const char *file, unsigned int line);
+extern RAKNET_API void (*rakFree_Ex) (void *p, const char *file, unsigned int line);
 extern RAK_DLL_EXPORT void (*notifyOutOfMemory) (const char *file, const long line);
 extern RAK_DLL_EXPORT void * (*dlMallocMMap) (size_t size);
 extern RAK_DLL_EXPORT void * (*dlMallocDirectMMap) (size_t size);
 extern RAK_DLL_EXPORT int (*dlMallocMUnmap) (void* ptr, size_t size);
-#ifdef __cplusplus
-}
-#endif
+
 
 // Change to a user defined allocation function
 void RAK_DLL_EXPORT SetMalloc( void* (*userFunction)(size_t size) );

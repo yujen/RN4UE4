@@ -43,7 +43,7 @@ public class RakNet : ModuleRules
         {
 				// ... add any modules that your module loads dynamically here ...
 		});
-        
+        /*
         if (Target.Type == TargetRules.TargetType.Editor)
         {
             // These modules are only needed for RakNetTestTool
@@ -55,7 +55,7 @@ public class RakNet : ModuleRules
             });
 
         }
-        
+        */
 
     }
 }

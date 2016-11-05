@@ -6,11 +6,11 @@ public class RN4UE4 : ModuleRules
 {
     public RN4UE4(TargetInfo Target)
     {
-        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "RakNet", });
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", });
 
-        PrivateDependencyModuleNames.AddRange(new string[] { "Core", "Engine", "RakNet", });
+        PrivateDependencyModuleNames.AddRange(new string[] { "RakNet", });
 
-        //PublicIncludePaths.AddRange(new string[] { "RakNet/Public" });
+        PublicIncludePaths.AddRange(new string[] {  });
 
         // Uncomment if you are using Slate UI
         // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
