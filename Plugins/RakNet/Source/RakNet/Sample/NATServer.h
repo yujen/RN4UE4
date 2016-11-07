@@ -2,16 +2,11 @@
 
 #pragma once
 
-
-
-
-
-
 #include "GameFramework/Actor.h"
 #include "NATServer.generated.h"
 
 
-
+DECLARE_LOG_CATEGORY_EXTERN(RakNet_NATServer, Log, All);
 
 
 enum FeatureSupport
@@ -57,11 +52,16 @@ public:
 	static const FeatureSupport  UDPProxyServerFramework_Supported = FeatureSupport::UNSUPPORTED;
 	static const FeatureSupport  CloudServerFramework_Supported = FeatureSupport::QUERY;
 
+	static const int DEFAULT_RAKPEER_PORT = 61111;
+
+
+	UFUNCTION(BlueprintCallable, Category = "RakNet|NATServer")
+		void StartServer(const int listeningPort);
 
 
 private:
 
-	int DEFAULT_RAKPEER_PORT = 61111;
+	
 
 
 
