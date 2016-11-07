@@ -10,6 +10,8 @@
 
 #include "RakNetDefines.h"
 
+#define RAK_DLL_EXPORT  
+/*
 #if defined(_WIN32) && !(defined(__GNUC__)  || defined(__GCCXML__)) && !defined(_RAKNET_LIB) && defined(_RAKNET_DLL)
 #define RAK_DLL_EXPORT __declspec(dllexport) 
 #elif defined(_WIN32) || defined(_WIN64)
@@ -17,7 +19,7 @@
 #else
 #define RAK_DLL_EXPORT RAKNET_API 
 #endif
-
+*/
 #define STATIC_FACTORY_DECLARATIONS(x) static x* GetInstance(void); \
 static void DestroyInstance( x *i);
 

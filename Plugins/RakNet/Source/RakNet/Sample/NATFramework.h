@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -14,7 +14,9 @@
 #include "RakSleep.h"
 #include "MessageIdentifiers.h"
 #include "Getche.h"
-
+#include "CloudServer.h"
+#include "CloudClient.h"
+#include "CloudServerHelper.h"
 
 
 struct SampleFramework
@@ -172,7 +174,7 @@ struct UDPProxyCoordinatorFramework : public SampleFramework
 };
 
 
-/*
+
 struct UDPProxyServerFramework : public SampleFramework, public RakNet::UDPProxyServerResultHandler
 {
 	RakNet::SystemAddress ConnectBlocking(RakNet::RakPeerInterface *rakPeer, const char *hostName)
@@ -350,4 +352,67 @@ struct UDPProxyServerFramework : public SampleFramework, public RakNet::UDPProxy
 
 	RakNet::UDPProxyServer *udpps;
 };
-*/
+
+struct CloudServerFramework : public SampleFramework
+{
+	CloudServerFramework() { isSupported = ANATServer::CloudServerFramework_Supported; }
+	virtual const char * QueryName(void) { return "CloudServer"; }
+	virtual const char * QueryRequirements(void) { return "None."; }
+	virtual const char * QueryFunction(void) { return "Single instance cloud server that maintains connection counts\nUseful as a directory server to find other client instances."; }
+	virtual void Init(RakNet::RakPeerInterface *rakPeer)
+	{
+		if (isSupported == SUPPORTED)
+		{
+			cloudServer = new RakNet::CloudServer;
+			rakPeer->AttachPlugin(cloudServer);
+			cloudClient = new RakNet::CloudClient;
+			rakPeer->AttachPlugin(cloudClient);
+			cloudServerHelperFilter = new RakNet::CloudServerHelperFilter;
+			cloudServer->AddQueryFilter(cloudServerHelperFilter);
+			cloudServer->SetMaxUploadBytesPerClient(65535);
+			cloudServerHelper.OnConnectionCountChange(rakPeer, cloudClient);
+		}
+	}
+	virtual void ProcessPacket(RakNet::RakPeerInterface *rakPeer, RakNet::Packet *packet)
+	{
+		if (isSupported != SUPPORTED)
+			return;
+
+		switch (packet->data[0])
+		{
+		case ID_NEW_INCOMING_CONNECTION:
+#ifdef VERBOSE_LOGGING
+			printf("Got connection to %s\n", packet->systemAddress.ToString(true));
+#endif
+			cloudServerHelper.OnConnectionCountChange(rakPeer, cloudClient);
+			break;
+		case ID_CONNECTION_LOST:
+		case ID_DISCONNECTION_NOTIFICATION:
+#ifdef VERBOSE_LOGGING
+			printf("Lost connection to %s\n", packet->systemAddress.ToString(true));
+#endif
+			cloudServerHelper.OnConnectionCountChange(rakPeer, cloudClient);
+			break;
+		}
+	}
+	virtual void Shutdown(RakNet::RakPeerInterface *rakPeer)
+	{
+		if (cloudServer)
+		{
+			rakPeer->DetachPlugin(cloudServer);
+			delete cloudServer;
+			cloudServer = 0;
+			rakPeer->DetachPlugin(cloudClient);
+			delete cloudClient;
+			cloudClient = 0;
+			delete cloudServerHelperFilter;
+			cloudServerHelperFilter = 0;
+		}
+	}
+
+	RakNet::CloudServer *cloudServer;
+	RakNet::CloudClient *cloudClient;
+	RakNet::CloudServerHelperFilter *cloudServerHelperFilter;
+	RakNet::CloudServerHelper cloudServerHelper;
+};
+

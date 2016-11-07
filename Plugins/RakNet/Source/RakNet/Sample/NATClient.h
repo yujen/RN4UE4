@@ -5,6 +5,7 @@
 #include "GameFramework/Actor.h"
 #include "NATClient.generated.h"
 
+
 UCLASS()
 class ANATClient : public AActor
 {

@@ -1,7 +1,11 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "RN4UE4.h"
+#include "RakNetPrivatePCH.h"
+
+//#include "RN4UE4.h"
 #include "Ping.h"
+
+DEFINE_LOG_CATEGORY(RakNet_Ping);
 
 
 // Sets default values
@@ -36,7 +40,7 @@ void APing::Tick( float DeltaTime )
 	p = client->Receive();
 	if (p == 0)
 	{
-		UE_LOG(RN4UE4, Log, TEXT("waiting data..."));
+		UE_LOG(RakNet_Ping, Log, TEXT("waiting data..."));
 		return;
 	}
 
@@ -56,16 +60,16 @@ void APing::Tick( float DeltaTime )
 		dataLength = p->length - sizeof(unsigned char) - sizeof(RakNet::TimeMS);
 
 		FString sysAddress = FString(p->systemAddress.ToString(true));
-		UE_LOG(RN4UE4, Log, TEXT("ID_UNCONNECTED_PONG from SystemAddress %s."), *sysAddress);
-		UE_LOG(RN4UE4, Log, TEXT("Time is %i"), time);
-		UE_LOG(RN4UE4, Log, TEXT("Data is %i bytes long"), dataLength);
+		UE_LOG(RakNet_Ping, Log, TEXT("ID_UNCONNECTED_PONG from SystemAddress %s."), *sysAddress);
+		UE_LOG(RakNet_Ping, Log, TEXT("Time is %i"), time);
+		UE_LOG(RakNet_Ping, Log, TEXT("Data is %i bytes long"), dataLength);
 
 
 		if (dataLength > 0)
 		{
 			char* charData = (char*)(p->data + sizeof(unsigned char) + sizeof(RakNet::TimeMS));
 			FString strData = FString(UTF8_TO_TCHAR(charData));
-			UE_LOG(RN4UE4, Log, TEXT("response string is %s, length is %d "), *strData, strlen(charData));
+			UE_LOG(RakNet_Ping, Log, TEXT("response string is %s, length is %d "), *strData, strlen(charData));
 
 			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, strData);
 			OnReceivePingResponse.Broadcast(strData);
@@ -87,7 +91,7 @@ void APing::Tick( float DeltaTime )
 	client = nullptr;
 	//RakNet::RakPeerInterface::DestroyInstance(server);
 	//RakNet::RakPeerInterface::DestroyInstance(client);
-	//UE_LOG(RN4UE4, Log, TEXT("client receive response!"));
+	//UE_LOG(RakNet_Ping, Log, TEXT("client receive response!"));
 
 }
 
@@ -99,8 +103,8 @@ void APing::StartServer(const int listeningPort = 8888, const FString& responseS
 
 	char* charString = TCHAR_TO_UTF8(*responseString);
 	//char* charString = TCHAR_TO_UTF8((L""));
-	UE_LOG(RN4UE4, Log, TEXT("Server response string length: %d"), strlen(charString));
-	UE_LOG(RN4UE4, Log, TEXT("Server response string: %s"), *FString(UTF8_TO_TCHAR(charString)));
+	UE_LOG(RakNet_Ping, Log, TEXT("Server response string length: %d"), strlen(charString));
+	UE_LOG(RakNet_Ping, Log, TEXT("Server response string: %s"), *FString(UTF8_TO_TCHAR(charString)));
 	//char* charString = TCHAR_TO_ANSI(L"abc123");
 	//char enumData[512] = TCHAR_TO_ANSI(L"abc123中文字串あいうえお");
 	//char enumData[512] = "abc123";
@@ -112,11 +116,11 @@ void APing::StartServer(const int listeningPort = 8888, const FString& responseS
 	server->SetMaximumIncomingConnections(2);
 	if (b)
 	{
-		UE_LOG(RN4UE4, Log, TEXT("Server started, waiting for connections."));
+		UE_LOG(RakNet_Ping, Log, TEXT("Server started, waiting for connections."));
 	}
 	else
 	{
-		UE_LOG(RN4UE4, Error, TEXT("Server start failed!"));
+		UE_LOG(RakNet_Ping, Error, TEXT("Server start failed!"));
 	}
 }
 
@@ -130,7 +134,7 @@ void APing::StopServer()
 
 void APing::ClientPing(const FString& host = "127.0.0.1", const int port = 8888)
 {
-	UE_LOG(RN4UE4, Log, TEXT("APing::ClientPing"));
+	UE_LOG(RakNet_Ping, Log, TEXT("APing::ClientPing"));
 
 	client = RakNet::RakPeerInterface::GetInstance();
 	RakNet::SocketDescriptor socketDescriptor(0, 0);

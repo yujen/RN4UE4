@@ -12,6 +12,7 @@
 #include "GameFramework/Actor.h"
 #include "Ping.generated.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(RakNet_Ping, Log, All);
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReceivePingResponse, FString, receivedString);
