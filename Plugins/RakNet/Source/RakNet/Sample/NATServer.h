@@ -2,30 +2,16 @@
 
 #pragma once
 
+#include "RakPeerInterface.h"
+#include "NATFramework.h"
+#include "RakNetStatistics.h"
+
 #include "GameFramework/Actor.h"
 #include "NATServer.generated.h"
 
 
 DECLARE_LOG_CATEGORY_EXTERN(RakNet_NATServer, Log, All);
 
-
-enum FeatureSupport
-{
-	SUPPORTED,
-	UNSUPPORTED,
-	QUERY
-};
-
-enum FeatureList
-{
-	NAT_TYPE_DETECTION_SERVER,
-	NAT_PUNCHTHROUGH_SERVER,
-	RELAY_PLUGIN,
-	UDP_PROXY_COORDINATOR,
-	UDP_PROXY_SERVER,
-	CLOUD_SERVER,
-	FEATURE_LIST_COUNT,
-};
 
 
 
@@ -45,12 +31,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
-	static const FeatureSupport NatTypeDetectionServerFramework_Supported = FeatureSupport::QUERY;
-	static const FeatureSupport NatPunchthroughServerFramework_Supported = FeatureSupport::QUERY;
-	static const FeatureSupport  RelayPlugin_Supported = FeatureSupport::QUERY;
-	static const FeatureSupport  UDPProxyCoordinatorFramework_Supported = FeatureSupport::UNSUPPORTED;
-	static const FeatureSupport  UDPProxyServerFramework_Supported = FeatureSupport::UNSUPPORTED;
-	static const FeatureSupport  CloudServerFramework_Supported = FeatureSupport::QUERY;
+	
 
 	static const int DEFAULT_RAKPEER_PORT = 61111;
 
@@ -61,9 +42,7 @@ public:
 
 private:
 
-	
-
-
-
+	SampleFramework* sampleFramework[FEATURE_LIST_COUNT];
+	RakNet::RakPeerInterface* rakPeer;
 
 };

@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "NATServer.h"
 #include "RakPeerInterface.h"
 #include "RakNetTypes.h"
 #include "Gets.h"
@@ -17,6 +16,33 @@
 #include "CloudServer.h"
 #include "CloudClient.h"
 #include "CloudServerHelper.h"
+
+
+enum FeatureSupport
+{
+	SUPPORTED,
+	UNSUPPORTED,
+	QUERY
+};
+
+enum FeatureList
+{
+	NAT_TYPE_DETECTION_SERVER,
+	NAT_PUNCHTHROUGH_SERVER,
+	RELAY_PLUGIN,
+	UDP_PROXY_COORDINATOR,
+	UDP_PROXY_SERVER,
+	CLOUD_SERVER,
+	FEATURE_LIST_COUNT,
+};
+
+
+static const FeatureSupport NatTypeDetectionServerFramework_Supported = FeatureSupport::QUERY;
+static const FeatureSupport NatPunchthroughServerFramework_Supported = FeatureSupport::QUERY;
+static const FeatureSupport  RelayPlugin_Supported = FeatureSupport::QUERY;
+static const FeatureSupport  UDPProxyCoordinatorFramework_Supported = FeatureSupport::UNSUPPORTED;
+static const FeatureSupport  UDPProxyServerFramework_Supported = FeatureSupport::UNSUPPORTED;
+static const FeatureSupport  CloudServerFramework_Supported = FeatureSupport::QUERY;
 
 
 struct SampleFramework
@@ -34,7 +60,7 @@ struct SampleFramework
 
 struct NatTypeDetectionServerFramework : public SampleFramework
 {
-	NatTypeDetectionServerFramework() { isSupported = ANATServer::NatTypeDetectionServerFramework_Supported; ntds = 0; }
+	NatTypeDetectionServerFramework() { isSupported = NatTypeDetectionServerFramework_Supported; ntds = 0; }
 	virtual const char * QueryName(void) override { return "NatTypeDetectionServer"; }
 	virtual const char * QueryRequirements(void) override { return "Requires 4 IP addresses"; }
 	virtual const char * QueryFunction(void) override { return "Determines router type to filter by connectable systems.\nOne instance needed, multiple instances may exist to spread workload."; }
@@ -73,7 +99,7 @@ struct NatTypeDetectionServerFramework : public SampleFramework
 
 struct NatPunchthroughServerFramework : public SampleFramework, public RakNet::NatPunchthroughServerDebugInterface_Printf
 {
-	NatPunchthroughServerFramework() { isSupported = ANATServer::NatPunchthroughServerFramework_Supported; nps = 0; }
+	NatPunchthroughServerFramework() { isSupported = NatPunchthroughServerFramework_Supported; nps = 0; }
 	virtual const char * QueryName(void) override { return "NatPunchthroughServerFramework"; }
 	virtual const char * QueryRequirements(void) override { return "None"; }
 	virtual const char * QueryFunction(void) override { return "Coordinates NATPunchthroughClient."; }
@@ -104,7 +130,7 @@ struct NatPunchthroughServerFramework : public SampleFramework, public RakNet::N
 
 struct RelayPluginFramework : public SampleFramework
 {
-	RelayPluginFramework() { isSupported = ANATServer::RelayPlugin_Supported; }
+	RelayPluginFramework() { isSupported = RelayPlugin_Supported; }
 	virtual const char * QueryName(void) override { return "RelayPlugin"; }
 	virtual const char * QueryRequirements(void) override { return "None."; }
 	virtual const char * QueryFunction(void) override { return "Relays messages between named connections."; }
@@ -135,7 +161,7 @@ struct RelayPluginFramework : public SampleFramework
 
 struct UDPProxyCoordinatorFramework : public SampleFramework
 {
-	UDPProxyCoordinatorFramework() { udppc = 0; isSupported = ANATServer::UDPProxyCoordinatorFramework_Supported; }
+	UDPProxyCoordinatorFramework() { udppc = 0; isSupported = UDPProxyCoordinatorFramework_Supported; }
 	virtual const char * QueryName(void) override { return "UDPProxyCoordinator"; }
 	virtual const char * QueryRequirements(void) override { return "Bandwidth to handle a few hundred bytes per game session."; }
 	virtual const char * QueryFunction(void) override { return "Coordinates UDPProxyClient to find available UDPProxyServer.\nExactly one instance required."; }
@@ -253,7 +279,7 @@ struct UDPProxyServerFramework : public SampleFramework, public RakNet::UDPProxy
 			return addresses[0];
 	}
 
-	UDPProxyServerFramework() { udpps = 0; isSupported = ANATServer::UDPProxyServerFramework_Supported; }
+	UDPProxyServerFramework() { udpps = 0; isSupported = UDPProxyServerFramework_Supported; }
 	virtual const char * QueryName(void) { return "UDPProxyServer"; }
 	virtual const char * QueryRequirements(void) { return "Bandwidth to handle forwarded game traffic."; }
 	virtual const char * QueryFunction(void) { return "Allows game clients to forward network traffic transparently.\nOne or more instances required, can be added at runtime."; }
@@ -355,7 +381,7 @@ struct UDPProxyServerFramework : public SampleFramework, public RakNet::UDPProxy
 
 struct CloudServerFramework : public SampleFramework
 {
-	CloudServerFramework() { isSupported = ANATServer::CloudServerFramework_Supported; }
+	CloudServerFramework() { isSupported = CloudServerFramework_Supported; }
 	virtual const char * QueryName(void) { return "CloudServer"; }
 	virtual const char * QueryRequirements(void) { return "None."; }
 	virtual const char * QueryFunction(void) { return "Single instance cloud server that maintains connection counts\nUseful as a directory server to find other client instances."; }
