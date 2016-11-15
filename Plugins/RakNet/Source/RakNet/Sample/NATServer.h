@@ -33,14 +33,27 @@ public:
 
 	
 
-	static const int DEFAULT_RAKPEER_PORT = 61111;
-
-
 	UFUNCTION(BlueprintCallable, Category = "RakNet|NATServer")
 		void StartServer(const int listeningPort);
 
+	UFUNCTION(BlueprintCallable, Category = "RakNet|NATServer")
+		void StopServer();
+
+	UFUNCTION(BlueprintCallable, Category = "RakNet|NATServer")
+		void PrintStatistics();
 
 private:
+
+	enum ServerFeatureList
+	{
+		NAT_TYPE_DETECTION_SERVER,
+		NAT_PUNCHTHROUGH_SERVER,
+		RELAY_PLUGIN,
+		UDP_PROXY_COORDINATOR,
+		UDP_PROXY_SERVER,
+		CLOUD_SERVER,
+		FEATURE_LIST_COUNT
+	};
 
 	SampleFramework* sampleFramework[FEATURE_LIST_COUNT];
 	RakNet::RakPeerInterface* rakPeer;

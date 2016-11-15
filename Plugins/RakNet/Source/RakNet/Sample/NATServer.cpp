@@ -30,62 +30,14 @@ void ANATServer::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 
-	RakNet::Packet *packet;
-	bool quit = false;
-	while (!quit)
+	RakNet::Packet* packet;
+	for (packet = rakPeer->Receive(); packet; rakPeer->DeallocatePacket(packet), packet = rakPeer->Receive())
 	{
-		for (packet = rakPeer->Receive(); packet; rakPeer->DeallocatePacket(packet), packet = rakPeer->Receive())
+		for (int i = 0; i < ServerFeatureList::FEATURE_LIST_COUNT; i++)
 		{
-			for (int i = 0; i < FEATURE_LIST_COUNT; i++)
-			{
-				sampleFramework[i]->ProcessPacket(rakPeer, packet);
-			}
+			sampleFramework[i]->ProcessPacket(rakPeer, packet);
 		}
-
-		if (kbhit())
-		{
-			char ch = getch();
-			if (ch == 'q')
-			{
-				quit = true;
-			}
-			else if (ch == ' ')
-			{
-				RakNet::RakNetStatistics rns;
-				char message[2048];
-				bool hasStatistics = rakPeer->GetStatistics(0, &rns);
-				if (hasStatistics)
-				{
-					RakNet::StatisticsToString(&rns, message, 2);
-					UE_LOG(RakNet_NATServer, Log, TEXT("SYSTEM 0: %s"), ANSI_TO_TCHAR(message));
-
-					memset(&rns, 0, sizeof(RakNet::RakNetStatistics));
-					rakPeer->GetStatistics(RakNet::UNASSIGNED_SYSTEM_ADDRESS, &rns);
-					StatisticsToString(&rns, message, 2);
-					UE_LOG(RakNet_NATServer, Log, TEXT("STAT SUM: %s"), ANSI_TO_TCHAR(message));
-				}
-				else
-				{
-					UE_LOG(RakNet_NATServer, Log, TEXT("No system 0"));
-				}
-
-				DataStructures::List<RakNet::SystemAddress> addresses;
-				DataStructures::List<RakNet::RakNetGUID> guids;
-				rakPeer->GetSystemList(addresses, guids);
-				UE_LOG(RakNet_NATServer, Log, TEXT("%i systems connected"), addresses.Size());
-			}
-		}
-		RakSleep(30);
 	}
-
-	printf("Quitting.\n");
-	for (int i = 0; i < FEATURE_LIST_COUNT; i++)
-	{
-		sampleFramework[i]->Shutdown(rakPeer);
-	}
-	rakPeer->Shutdown(0);
-	RakNet::RakPeerInterface::DestroyInstance(rakPeer);
-	rakPeer = nullptr;
 
 }
 
@@ -141,10 +93,10 @@ void ANATServer::StartServer(const int listeningPort)
 	sampleFramework[i++] = new UDPProxyCoordinatorFramework;
 	sampleFramework[i++] = new UDPProxyServerFramework;
 	sampleFramework[i++] = new CloudServerFramework;
-	check(i == FEATURE_LIST_COUNT);
+	check(i == ServerFeatureList::FEATURE_LIST_COUNT);
 
 	// start QUERY feature
-	for (i = 0; i < FEATURE_LIST_COUNT; i++)
+	for (i = 0; i < ServerFeatureList::FEATURE_LIST_COUNT; i++)
 	{
 		if (sampleFramework[i]->isSupported == QUERY)
 		{
@@ -157,7 +109,7 @@ void ANATServer::StartServer(const int listeningPort)
 			);
 		}
 	}
-	for (i = 0; i < FEATURE_LIST_COUNT; i++)
+	for (i = 0; i < ServerFeatureList::FEATURE_LIST_COUNT; i++)
 	{
 		if (sampleFramework[i]->isSupported == SUPPORTED)
 		{
@@ -174,7 +126,7 @@ void ANATServer::StartServer(const int listeningPort)
 	}
 
 	bool anySupported = false;
-	for (i = 0; i < FEATURE_LIST_COUNT; i++)
+	for (i = 0; i < ServerFeatureList::FEATURE_LIST_COUNT; i++)
 	{
 		if (sampleFramework[i]->isSupported == SUPPORTED)
 		{
@@ -187,10 +139,11 @@ void ANATServer::StartServer(const int listeningPort)
 		UE_LOG(RakNet_NATServer, Warning, TEXT("No features supported! Quitting."));
 		rakPeer->Shutdown(0);
 		RakNet::RakPeerInterface::DestroyInstance(rakPeer);
+		rakPeer = nullptr;
 		return;
 	}
 
-	for (i = 0; i < FEATURE_LIST_COUNT; i++)
+	for (i = 0; i < ServerFeatureList::FEATURE_LIST_COUNT; i++)
 	{
 		if (sampleFramework[i]->isSupported == SUPPORTED)
 		{
@@ -203,3 +156,46 @@ void ANATServer::StartServer(const int listeningPort)
 
 }
 
+void ANATServer::StopServer()
+{
+
+	for (int i = 0; i < ServerFeatureList::FEATURE_LIST_COUNT; i++)
+	{
+		sampleFramework[i]->Shutdown(rakPeer);
+	}
+	rakPeer->Shutdown(0);
+	RakNet::RakPeerInterface::DestroyInstance(rakPeer);
+	rakPeer = nullptr;
+
+	//
+	PrimaryActorTick.bCanEverTick = false;
+
+}
+
+void ANATServer::PrintStatistics()
+{
+
+	RakNet::RakNetStatistics rns;
+	char message[2048];
+	bool hasStatistics = rakPeer->GetStatistics(0, &rns);
+	if (hasStatistics)
+	{
+		RakNet::StatisticsToString(&rns, message, 2);
+		UE_LOG(RakNet_NATServer, Log, TEXT("SYSTEM 0: %s"), ANSI_TO_TCHAR(message));
+
+		memset(&rns, 0, sizeof(RakNet::RakNetStatistics));
+		rakPeer->GetStatistics(RakNet::UNASSIGNED_SYSTEM_ADDRESS, &rns);
+		StatisticsToString(&rns, message, 2);
+		UE_LOG(RakNet_NATServer, Log, TEXT("STAT SUM: %s"), ANSI_TO_TCHAR(message));
+	}
+	else
+	{
+		UE_LOG(RakNet_NATServer, Log, TEXT("No system 0"));
+	}
+
+	DataStructures::List<RakNet::SystemAddress> addresses;
+	DataStructures::List<RakNet::RakNetGUID> guids;
+	rakPeer->GetSystemList(addresses, guids);
+	UE_LOG(RakNet_NATServer, Log, TEXT("%i systems connected"), addresses.Size());
+
+}

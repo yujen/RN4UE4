@@ -2,8 +2,15 @@
 
 #pragma once
 
+#include "RakPeerInterface.h"
+#include "NATFramework.h"
+
+
 #include "GameFramework/Actor.h"
 #include "NATClient.generated.h"
+
+
+DECLARE_LOG_CATEGORY_EXTERN(RakNet_NATClient, Log, All);
 
 
 UCLASS()
@@ -21,6 +28,25 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	
-	
+
+	UFUNCTION(BlueprintCallable, Category = "RakNet|NATClient")
+		void StartConnectServer(const FString& serverAddress, const int serverPort, const int usePort);
+
+
+private:
+
+	// client feature list
+	enum ClientFeatureList
+	{
+		_UPNPFramework,
+		_NatTypeDetectionFramework,
+		_NatPunchthoughFramework,
+		_Router2Framework,
+		_UDPProxyClientFramework,
+		FEATURE_LIST_COUNT
+	};
+
+
+	void PrintPacketMessages(RakNet::Packet* packet, RakNet::RakPeerInterface* rakPeer);
+
 };

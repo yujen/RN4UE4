@@ -18,6 +18,11 @@
 			"Name": "Substance",
 			"Enabled": false,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/2f6439c2f9584f49809d9b13b16c2ba4"
+		},
+		{
+			"Name": "BlueManVehicleAI",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/6d468c2dc687400f9c466ca418c8a1c1"
 		}
 	]
 }
