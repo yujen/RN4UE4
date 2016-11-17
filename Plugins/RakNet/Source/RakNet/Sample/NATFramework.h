@@ -679,16 +679,16 @@ struct NatPunchthoughClientFramework : public SampleClientFramework, public RakN
 			switch (packet->data[0])
 			{
 			case ID_NAT_TARGET_NOT_CONNECTED:
-				printf("Failed: ID_NAT_TARGET_NOT_CONNECTED\n");
+				UE_LOG(RakNet_NATFramework, Log, TEXT("Failed: ID_NAT_TARGET_NOT_CONNECTED"));
 				break;
 			case ID_NAT_TARGET_UNRESPONSIVE:
-				printf("Failed: ID_NAT_TARGET_UNRESPONSIVE\n");
+				UE_LOG(RakNet_NATFramework, Log, TEXT("Failed: ID_NAT_TARGET_UNRESPONSIVE"));
 				break;
 			case ID_NAT_CONNECTION_TO_TARGET_LOST:
-				printf("Failed: ID_NAT_CONNECTION_TO_TARGET_LOST\n");
+				UE_LOG(RakNet_NATFramework, Log, TEXT("Failed: ID_NAT_CONNECTION_TO_TARGET_LOST"));
 				break;
 			case ID_NAT_PUNCHTHROUGH_FAILED:
-				printf("Failed: ID_NAT_PUNCHTHROUGH_FAILED\n");
+				UE_LOG(RakNet_NATFramework, Log, TEXT("Failed: ID_NAT_PUNCHTHROUGH_FAILED"));
 				break;
 			}
 
@@ -699,10 +699,17 @@ struct NatPunchthoughClientFramework : public SampleClientFramework, public RakN
 		{
 			unsigned char weAreTheSender = packet->data[1];
 			if (weAreTheSender)
-				printf("NAT punch success to remote system %s.\n", packet->systemAddress.ToString(true));
+			{
+				UE_LOG(RakNet_NATFramework, Log, TEXT("NAT punch success to remote system %s"), ANSI_TO_TCHAR(packet->systemAddress.ToString(true)));
+			}
 			else
-				printf("NAT punch success from remote system %s.\n", packet->systemAddress.ToString(true));
+			{
+				UE_LOG(RakNet_NATFramework, Log, TEXT("NAT punch success from remote system %s"), ANSI_TO_TCHAR(packet->systemAddress.ToString(true)));
+			}
 
+
+			sampleResult = SUCCEEDED;
+			/*
 			char guid[128];
 			printf("Enter RakNetGuid of the remote system, which should have already connected.\nOr press enter to quit.\n");
 			Gets(guid, sizeof(guid));
@@ -717,7 +724,7 @@ struct NatPunchthoughClientFramework : public SampleClientFramework, public RakN
 			else
 			{
 				sampleResult = SUCCEEDED;
-			}
+			}*/
 		}
 	}
 	virtual void Update(RakNet::RakPeerInterface *rakPeer)
