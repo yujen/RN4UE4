@@ -13,6 +13,20 @@
 DECLARE_LOG_CATEGORY_EXTERN(RakNet_NATClient, Log, All);
 
 
+
+// client feature list
+UENUM(BlueprintType)
+enum ClientFeatureList
+{
+	_UPNPFramework					UMETA(DisplayName = "UPNPFramework"),
+	_NatTypeDetectionFramework		UMETA(DisplayName = "NatTypeDetectionFramework"),
+	_NatPunchthoughFramework		UMETA(DisplayName = "NatPunchthoughFramework"),
+	_Router2Framework				UMETA(DisplayName = "Router2Framework"),
+	_UDPProxyClientFramework		UMETA(DisplayName = "UDPProxyClientFramework"),
+	FEATURE_LIST_COUNT
+};
+
+
 UCLASS()
 class ANATClient : public AActor
 {
@@ -30,22 +44,23 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "RakNet|NATClient")
-		void StartConnectServer(const FString& serverAddress, const int serverPort, const int usePort);
+		void StartClient(const FString& serverAddress, const int serverPort, const int usePort);
+
+	UFUNCTION(BlueprintCallable, Category = "RakNet|NATClient")
+		void StopClient();
+
+	UFUNCTION(BlueprintCallable, Category = "RakNet|NATClient")
+		void InitFramework(const ClientFeatureList clientFeatureList);
 
 
 private:
 
-	// client feature list
-	enum ClientFeatureList
-	{
-		_UPNPFramework,
-		_NatTypeDetectionFramework,
-		_NatPunchthoughFramework,
-		_Router2Framework,
-		_UDPProxyClientFramework,
-		FEATURE_LIST_COUNT
-	};
+	
 
+
+	ClientFeatureList currentStage;
+	SampleClientFramework* samples[ClientFeatureList::FEATURE_LIST_COUNT];
+	RakNet::RakPeerInterface* rakPeer;
 
 	void PrintPacketMessages(RakNet::Packet* packet, RakNet::RakPeerInterface* rakPeer);
 

@@ -4,9 +4,13 @@
 #include "NATFramework.h"
 
 
+DEFINE_LOG_CATEGORY(RakNet_NATFramework);
+
 
 RakNet::SystemAddress SelectAmongConnectedSystems(RakNet::RakPeerInterface *rakPeer, const char *hostName)
 {
+	return RakNet::UNASSIGNED_SYSTEM_ADDRESS;
+	/*
 	DataStructures::List<RakNet::SystemAddress> addresses;
 	DataStructures::List<RakNet::RakNetGUID> guids;
 	rakPeer->GetSystemList(addresses, guids);
@@ -16,7 +20,7 @@ RakNet::SystemAddress SelectAmongConnectedSystems(RakNet::RakPeerInterface *rakP
 	}
 	if (addresses.Size() > 1)
 	{
-		printf("Select IP address for %s.\n", hostName);
+		UE_LOG(RakNet_NATFramework, Log, TEXT("Select IP address for %s"), ANSI_TO_TCHAR(hostName));
 		char buff[64];
 		for (unsigned int i = 0; i < addresses.Size(); i++)
 		{
@@ -37,13 +41,14 @@ RakNet::SystemAddress SelectAmongConnectedSystems(RakNet::RakPeerInterface *rakP
 	}
 	else
 		return addresses[0];
+		*/
 }
 
 RakNet::SystemAddress ServerConnectBlocking(RakNet::RakPeerInterface *rakPeer, const char *hostName)
 {
 	char ipAddr[64];
 	printf("Enter IP of system %s is running on: ", hostName);
-	Gets(ipAddr, sizeof(ipAddr));
+	//Gets(ipAddr, sizeof(ipAddr));
 	if (ipAddr[0] == 0)
 	{
 		printf("Failed. Not connected to %s.\n", hostName);
@@ -51,7 +56,7 @@ RakNet::SystemAddress ServerConnectBlocking(RakNet::RakPeerInterface *rakPeer, c
 	}
 	char port[64];
 	printf("Enter port of system %s is running on: ", hostName);
-	Gets(port, sizeof(port));
+	//Gets(port, sizeof(port));
 	if (port[0] == 0)
 	{
 		printf("Failed. Not connected to %s.\n", hostName);
@@ -85,12 +90,16 @@ RakNet::SystemAddress ClientConnectBlocking(RakNet::RakPeerInterface *rakPeer, c
 {
 	char ipAddr[64];
 	if (defaultAddress == 0 || defaultAddress[0] == 0)
+	{
 		printf("Enter IP of system %s is running on: ", hostName);
+	}
 	else
+	{
 		printf("Enter IP of system %s, or press enter for default: ", hostName);
+	}
 	if (defaultAddress == 0 || defaultAddress[0] == 0)
 	{
-		printf("Failed. No address entered for %s.\n", hostName);
+		UE_LOG(RakNet_NATFramework, Log, TEXT("Failed. No address entered for %s"), ANSI_TO_TCHAR(hostName));
 		return RakNet::UNASSIGNED_SYSTEM_ADDRESS;
 	}
 	else
@@ -100,9 +109,13 @@ RakNet::SystemAddress ClientConnectBlocking(RakNet::RakPeerInterface *rakPeer, c
 
 	char port[64];
 	if (defaultAddress == 0 || defaultAddress[0] == 0)
+	{
 		printf("Enter port of system %s is running on: ", hostName);
+	}
 	else
+	{
 		printf("Enter port of system %s, or press enter for default: ", hostName);
+	}
 	if (defaultPort == 0 || defaultPort[0] == 0)
 	{
 		printf("Failed. No port entered for %s.\n", hostName);
@@ -115,10 +128,10 @@ RakNet::SystemAddress ClientConnectBlocking(RakNet::RakPeerInterface *rakPeer, c
 
 	if (rakPeer->Connect(ipAddr, atoi(port), 0, 0) != RakNet::CONNECTION_ATTEMPT_STARTED)
 	{
-		printf("Failed connect call for %s.\n", hostName);
+		UE_LOG(RakNet_NATFramework, Log, TEXT("Failed connect call for %s"), ANSI_TO_TCHAR(hostName));
 		return RakNet::UNASSIGNED_SYSTEM_ADDRESS;
 	}
-	printf("Connecting...\n");
+	UE_LOG(RakNet_NATFramework, Log, TEXT("Connecting..."));
 	RakNet::Packet *packet;
 	while (1)
 	{
@@ -130,7 +143,7 @@ RakNet::SystemAddress ClientConnectBlocking(RakNet::RakPeerInterface *rakPeer, c
 			}
 			else if (packet->data[0] == ID_NO_FREE_INCOMING_CONNECTIONS)
 			{
-				printf("ID_NO_FREE_INCOMING_CONNECTIONS");
+				UE_LOG(RakNet_NATFramework, Log, TEXT("ID_NO_FREE_INCOMING_CONNECTIONS"));
 				return RakNet::UNASSIGNED_SYSTEM_ADDRESS;
 			}
 			else

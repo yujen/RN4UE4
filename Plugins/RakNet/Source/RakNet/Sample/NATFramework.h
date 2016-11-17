@@ -24,6 +24,9 @@
 #include "Itoa.h"
 
 
+DECLARE_LOG_CATEGORY_EXTERN(RakNet_NATFramework, Log, All);
+
+
 enum FeatureSupport
 {
 	SUPPORTED,
@@ -527,7 +530,7 @@ struct NatTypeDetectionFramework : public SampleClientFramework
 			serverAddress = ClientConnectBlocking(rakPeer, "NatTypeDetectionServer", DEFAULT_SERVER_ADDRESS, DEFAULT_SERVER_PORT);
 			if (serverAddress == RakNet::UNASSIGNED_SYSTEM_ADDRESS)
 			{
-				printf("Failed to connect to a server.\n");
+				UE_LOG(RakNet_NATFramework, Log, TEXT("Failed to connect to a server."));
 				sampleResult = FAILED;
 				return;
 			}
@@ -549,17 +552,17 @@ struct NatTypeDetectionFramework : public SampleClientFramework
 			{
 				if (CanConnect(r, (RakNet::NATTypeDetectionResult)i))
 				{
-					if (i != 0)
-						printf(", ");
-					printf("%s", NATTypeDetectionResultToString((RakNet::NATTypeDetectionResult)i));
+					//if (i != 0)
+					//	printf(", ");
+					//printf("%s", NATTypeDetectionResultToString((RakNet::NATTypeDetectionResult)i));
+					UE_LOG(RakNet_NATFramework, Log, TEXT("%s"), ANSI_TO_TCHAR(NATTypeDetectionResultToString((RakNet::NATTypeDetectionResult)i)));
 				}
 			}
-			printf("\n");
+			
 			if (r == RakNet::NAT_TYPE_PORT_RESTRICTED || r == RakNet::NAT_TYPE_SYMMETRIC)
 			{
 				// For UPNP, see Samples\UDPProxy
-				printf("Note: Your router must support UPNP or have the user manually forward ports.\n");
-				printf("Otherwise NATPunchthrough may not always succeed.\n");
+				UE_LOG(RakNet_NATFramework, Log, TEXT("Note: Your router must support UPNP or have the user manually forward ports.\nOtherwise NATPunchthrough may not always succeed."));
 			}
 
 			sampleResult = SUCCEEDED;
@@ -571,7 +574,8 @@ struct NatTypeDetectionFramework : public SampleClientFramework
 
 		if (sampleResult == PENDING && RakNet::GetTimeMS() > timeout)
 		{
-			printf("No response from the server, probably not running NatTypeDetectionServer plugin.\n");
+			//printf("No response from the server, probably not running NatTypeDetectionServer plugin.\n");
+			UE_LOG(RakNet_NATFramework, Log, TEXT("No response from the server, probably not running NatTypeDetectionServer plugin."));
 			sampleResult = FAILED;
 		}
 	}
@@ -608,7 +612,7 @@ struct NatPunchthoughClientFramework : public SampleClientFramework, public RakN
 			serverAddress = ClientConnectBlocking(rakPeer, "NatPunchthroughServer", DEFAULT_SERVER_ADDRESS, DEFAULT_SERVER_PORT);
 			if (serverAddress == RakNet::UNASSIGNED_SYSTEM_ADDRESS)
 			{
-				printf("Failed to connect to a server.\n");
+				UE_LOG(RakNet_NATFramework, Log, TEXT("Failed to connect to a server."));
 				sampleResult = FAILED;
 				return;
 			}
@@ -619,9 +623,16 @@ struct NatPunchthoughClientFramework : public SampleClientFramework, public RakN
 		rakPeer->AttachPlugin(npClient);
 
 
-		char guid[128];
-		printf("Enter RakNetGuid of the remote system, which should have already connected\nto the server.\nOr press enter to just listen.\n");
-		Gets(guid, sizeof(guid));
+		//char guid[128];
+		//printf("Enter RakNetGuid of the remote system, which should have already connected\nto the server.\nOr press enter to just listen.\n");
+		UE_LOG(RakNet_NATFramework, Log, TEXT("Listening..."));
+		UE_LOG(RakNet_NATFramework, Log, TEXT("My GUID is %s"), ANSI_TO_TCHAR(rakPeer->GetMyGUID().ToString()));
+		isListening = true;
+
+		// Find the stride of our router in advance
+		npClient->FindRouterPortStride(serverAddress);
+
+		/*Gets(guid, sizeof(guid));
 		if (guid[0])
 		{
 			RakNet::RakNetGUID remoteSystemGuid;
@@ -640,7 +651,7 @@ struct NatPunchthoughClientFramework : public SampleClientFramework, public RakN
 			// Find the stride of our router in advance
 			npClient->FindRouterPortStride(serverAddress);
 
-		}
+		}*/
 	}
 
 	virtual void ProcessPacket(RakNet::Packet *packet)
@@ -715,7 +726,7 @@ struct NatPunchthoughClientFramework : public SampleClientFramework, public RakN
 
 		if (sampleResult == PENDING && RakNet::GetTimeMS() > timeout && isListening == false)
 		{
-			printf("No response from the server, probably not running NatPunchthroughServer plugin.\n");
+			UE_LOG(RakNet_NATFramework, Log, TEXT("No response from the server, probably not running NatPunchthroughServer plugin."));
 			sampleResult = FAILED;
 		}
 	}

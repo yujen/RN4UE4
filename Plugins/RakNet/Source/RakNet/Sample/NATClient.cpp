@@ -29,11 +29,26 @@ void ANATClient::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
+
+	samples[(int)currentStage]->Update(rakPeer);
+	RakNet::Packet* packet;
+	for (packet = rakPeer->Receive(); packet; rakPeer->DeallocatePacket(packet), packet = rakPeer->Receive())
+	{
+		for (int i = 0; i < FEATURE_LIST_COUNT; i++)
+		{
+			samples[i]->ProcessPacket(packet);
+		}
+
+		PrintPacketMessages(packet, rakPeer);
+	}
+
+
 }
 
-void ANATClient::StartConnectServer(const FString& serverAddress, const int serverPort, const int usePort)
+void ANATClient::StartClient(const FString& serverAddress, const int serverPort, const int usePort)
 {
-	RakNet::RakPeerInterface* rakPeer = RakNet::RakPeerInterface::GetInstance();
+	rakPeer = RakNet::RakPeerInterface::GetInstance();
 
 
 	RakNet::SocketDescriptor sd(usePort, 0);	// #define DEFAULT_RAKPEER_PORT 50000
@@ -46,7 +61,7 @@ void ANATClient::StartConnectServer(const FString& serverAddress, const int serv
 	rakPeer->SetMaximumIncomingConnections(32);
 
 
-	SampleClientFramework* samples[ClientFeatureList::FEATURE_LIST_COUNT];
+	//SampleClientFramework* samples[ClientFeatureList::FEATURE_LIST_COUNT];
 	unsigned int i = 0;
 	samples[i++] = new UPNPFramework;
 	samples[i++] = new NatTypeDetectionFramework;
@@ -57,12 +72,15 @@ void ANATClient::StartConnectServer(const FString& serverAddress, const int serv
 
 
 
+	
+
+	return;
 
 	// ====================TODO
 
 
 	ClientFeatureList currentStage = ClientFeatureList::_UPNPFramework;
-
+	/*
 	while (samples[(int)currentStage]->QueryRequiresServer() == true)
 	{
 		UE_LOG(RakNet_NATClient, Log, TEXT("No server: Skipping %s"), ANSI_TO_TCHAR(samples[(int)currentStage]->QueryName()));
@@ -76,14 +94,15 @@ void ANATClient::StartConnectServer(const FString& serverAddress, const int serv
 			return;
 		}
 	}
+	*/
+
 
 
 	while (1)
 	{
-		printf("Executing %s\n", samples[(int)currentStage]->QueryName());
+		UE_LOG(RakNet_NATClient, Log, TEXT("Executing %s"), ANSI_TO_TCHAR(samples[(int)currentStage]->QueryName()));
 		samples[(int)currentStage]->Init(rakPeer);
 
-		bool thisSampleDone = false;
 		while (1)
 		{
 			samples[(int)currentStage]->Update(rakPeer);
@@ -98,61 +117,46 @@ void ANATClient::StartConnectServer(const FString& serverAddress, const int serv
 				PrintPacketMessages(packet, rakPeer);
 			}
 
+
+			/*
 			if (samples[(int)currentStage]->sampleResult == FAILED ||
 				samples[(int)currentStage]->sampleResult == SUCCEEDED)
 			{
-				printf("\n");
-				thisSampleDone = true;
 				if (samples[(int)currentStage]->sampleResult == FAILED)
 				{
-					printf("Failed %s\n", samples[(int)currentStage]->QueryName());
+					UE_LOG(RakNet_NATClient, Log, TEXT("Failed %s"), ANSI_TO_TCHAR(samples[(int)currentStage]->QueryName()));
 
 					int stageInt = (int)currentStage;
 					stageInt++;
 					currentStage = (ClientFeatureList)stageInt;
 					if (currentStage == FEATURE_LIST_COUNT)
 					{
-						printf("Connectivity not possible. Exiting\n");
+						UE_LOG(RakNet_NATClient, Log, TEXT("Connectivity not possible. Exiting."));
 						rakPeer->Shutdown(100);
 						RakNet::RakPeerInterface::DestroyInstance(rakPeer);
 						return;
 					}
 					else
 					{
-						printf("Proceeding to next stage.\n");
+						UE_LOG(RakNet_NATClient, Log, TEXT("Proceeding to next stage."));
 						break;
 					}
 				}
 				else
 				{
-					printf("Passed %s\n", samples[(int)currentStage]->QueryName());
+					UE_LOG(RakNet_NATClient, Log, TEXT("Passed %s"), ANSI_TO_TCHAR(samples[(int)currentStage]->QueryName()));
 					if (samples[(int)currentStage]->QueryQuitOnSuccess())
 					{
-
-						printf("Press any key to quit.\n");
-						while (!kbhit())
-						{
-							for (packet = rakPeer->Receive(); packet; rakPeer->DeallocatePacket(packet), packet = rakPeer->Receive())
-							{
-								for (i = 0; i < FEATURE_LIST_COUNT; i++)
-								{
-									samples[i]->ProcessPacket(packet);
-								}
-
-								PrintPacketMessages(packet, rakPeer);
-							}
-							RakSleep(30);
-						}
+						//printf("Press any key to quit.\n");
+						
 
 						rakPeer->Shutdown(100);
 						RakNet::RakPeerInterface::DestroyInstance(rakPeer);
-						printf("Press enter to quit.\n");
-						char temp[32];
-						Gets(temp, sizeof(temp));
+
 						return;
 					}
 
-					printf("Proceeding to next stage.\n");
+					UE_LOG(RakNet_NATClient, Log, TEXT("Proceeding to next stage."));
 					int stageInt = (int)currentStage;
 					stageInt++;
 					if (stageInt < FEATURE_LIST_COUNT)
@@ -161,21 +165,6 @@ void ANATClient::StartConnectServer(const FString& serverAddress, const int serv
 					}
 					else
 					{
-						printf("Press any key to quit when done.\n");
-
-						while (!kbhit())
-						{
-							for (packet = rakPeer->Receive(); packet; rakPeer->DeallocatePacket(packet), packet = rakPeer->Receive())
-							{
-								for (i = 0; i < FEATURE_LIST_COUNT; i++)
-								{
-									samples[i]->ProcessPacket(packet);
-								}
-
-								PrintPacketMessages(packet, rakPeer);
-							}
-							RakSleep(30);
-						}
 
 						rakPeer->Shutdown(100);
 						RakNet::RakPeerInterface::DestroyInstance(rakPeer);
@@ -184,8 +173,8 @@ void ANATClient::StartConnectServer(const FString& serverAddress, const int serv
 					break;
 				}
 			}
-
-			RakSleep(30);
+			
+			RakSleep(30); */
 		}
 	}
 
@@ -194,6 +183,20 @@ void ANATClient::StartConnectServer(const FString& serverAddress, const int serv
 	//PrimaryActorTick.bCanEverTick = true;
 }
 
+void ANATClient::StopClient()
+{
+	rakPeer->Shutdown(0);
+	RakNet::RakPeerInterface::DestroyInstance(rakPeer);
+	rakPeer = nullptr;
+}
+
+void ANATClient::InitFramework(const ClientFeatureList clientFeatureList)
+{
+	currentStage = clientFeatureList;
+	samples[(int)currentStage]->Init(rakPeer);
+
+	PrimaryActorTick.bCanEverTick = true;
+}
 
 void ANATClient::PrintPacketMessages(RakNet::Packet* packet, RakNet::RakPeerInterface* rakPeer)
 {
@@ -202,49 +205,48 @@ void ANATClient::PrintPacketMessages(RakNet::Packet* packet, RakNet::RakPeerInte
 	{
 	case ID_DISCONNECTION_NOTIFICATION:
 		// Connection lost normally
-		printf("ID_DISCONNECTION_NOTIFICATION\n");
+		UE_LOG(RakNet_NATClient, Log, TEXT("ID_DISCONNECTION_NOTIFICATION"));
 		break;
 	case ID_NEW_INCOMING_CONNECTION:
-		printf("ID_NEW_INCOMING_CONNECTION\n");
+		UE_LOG(RakNet_NATClient, Log, TEXT("ID_NEW_INCOMING_CONNECTION"));
 		break;
 	case ID_ALREADY_CONNECTED:
 		// Connection lost normally
-		printf("ID_ALREADY_CONNECTED\n");
+		UE_LOG(RakNet_NATClient, Log, TEXT("ID_ALREADY_CONNECTED"));
 		break;
 	case ID_INCOMPATIBLE_PROTOCOL_VERSION:
-		printf("ID_INCOMPATIBLE_PROTOCOL_VERSION\n");
+		UE_LOG(RakNet_NATClient, Log, TEXT("ID_INCOMPATIBLE_PROTOCOL_VERSION"));
 		break;
 	case ID_REMOTE_DISCONNECTION_NOTIFICATION: // Server telling the clients of another client disconnecting gracefully.  You can manually broadcast this in a peer to peer enviroment if you want.
-		printf("ID_REMOTE_DISCONNECTION_NOTIFICATION\n");
+		UE_LOG(RakNet_NATClient, Log, TEXT("ID_REMOTE_DISCONNECTION_NOTIFICATION"));
 		break;
 	case ID_REMOTE_CONNECTION_LOST: // Server telling the clients of another client disconnecting forcefully.  You can manually broadcast this in a peer to peer enviroment if you want.
-		printf("ID_REMOTE_CONNECTION_LOST\n");
+		UE_LOG(RakNet_NATClient, Log, TEXT("ID_REMOTE_CONNECTION_LOST"));
 		break;
 	case ID_REMOTE_NEW_INCOMING_CONNECTION: // Server telling the clients of another client connecting.  You can manually broadcast this in a peer to peer enviroment if you want.
-		printf("ID_REMOTE_NEW_INCOMING_CONNECTION\n");
+		UE_LOG(RakNet_NATClient, Log, TEXT("ID_REMOTE_NEW_INCOMING_CONNECTION"));
 		break;
 	case ID_CONNECTION_BANNED: // Banned from this server
-		printf("We are banned from this server.\n");
+		UE_LOG(RakNet_NATClient, Log, TEXT("We are banned from this server."));
 		break;
 	case ID_CONNECTION_ATTEMPT_FAILED:
-		printf("Connection attempt failed\n");
+		UE_LOG(RakNet_NATClient, Log, TEXT("Connection attempt failed."));
 		break;
 	case ID_NO_FREE_INCOMING_CONNECTIONS:
-		printf("ID_NO_FREE_INCOMING_CONNECTIONS\n");
+		UE_LOG(RakNet_NATClient, Log, TEXT("ID_NO_FREE_INCOMING_CONNECTIONS"));
 		break;
 
 	case ID_INVALID_PASSWORD:
-		printf("ID_INVALID_PASSWORD\n");
+		UE_LOG(RakNet_NATClient, Log, TEXT("ID_INVALID_PASSWORD"));
 		break;
 
 	case ID_CONNECTION_LOST:
-		printf("ID_CONNECTION_LOST from %s\n", packet->systemAddress.ToString(true));
+		UE_LOG(RakNet_NATClient, Log, TEXT("ID_CONNECTION_LOST from %s"), ANSI_TO_TCHAR(packet->systemAddress.ToString(true)));
 		break;
 
 	case ID_CONNECTION_REQUEST_ACCEPTED:
 		// This tells the client they have connected
-		printf("ID_CONNECTION_REQUEST_ACCEPTED to %s with GUID %s\n", packet->systemAddress.ToString(true), packet->guid.ToString());
-		printf("My external address is %s\n", rakPeer->GetExternalID(packet->systemAddress).ToString(true));
+		UE_LOG(RakNet_NATClient, Log, TEXT("ID_CONNECTION_REQUEST_ACCEPTED to %s with GUID %s\nMy external address is %s"), ANSI_TO_TCHAR(packet->systemAddress.ToString(true)), ANSI_TO_TCHAR(packet->guid.ToString()), ANSI_TO_TCHAR(rakPeer->GetExternalID(packet->systemAddress).ToString(true)));
 		break;
 	}
 }
