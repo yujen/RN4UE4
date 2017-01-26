@@ -6,18 +6,22 @@ public class RN4UE4 : ModuleRules
 {
     public RN4UE4(TargetInfo Target)
     {
-        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", });
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "RakNet", });
 
         PrivateDependencyModuleNames.AddRange(new string[] { "RakNet", });
 
-        PublicIncludePaths.AddRange(new string[] {  });
+		PublicIncludePaths.AddRange(new string[] { "RakNet/Public", });
 
-        // Uncomment if you are using Slate UI
-        // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
+		PrivateIncludePaths.AddRange(new string[] { "RakNet/Private", });
 
-        // Uncomment if you are using online features
-        // PrivateDependencyModuleNames.Add("OnlineSubsystem");
+		PrivateIncludePathModuleNames.AddRange(new string[] { "RakNet", });
 
-        // To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
-    }
+		// Uncomment if you are using Slate UI
+		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
+
+		// Uncomment if you are using online features
+		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
+
+		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
+	}
 }
