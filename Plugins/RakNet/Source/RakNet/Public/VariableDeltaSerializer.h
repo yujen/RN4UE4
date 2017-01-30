@@ -49,8 +49,7 @@ public:
 
 	struct SerializationContext
 	{
-		SerializationContext();
-		~SerializationContext();
+		SerializationContext() { variableHistoryIdentical = 0; variableHistoryUnique = 0; }
 
 		RakNetGUID guid;
 		BitStream *bitStream;

@@ -125,9 +125,19 @@ public:
 	/// \internal
 	struct VariableLastValueNode
 	{
-		VariableLastValueNode();
-		VariableLastValueNode(const unsigned char *data, int _byteLength);
-		~VariableLastValueNode();
+		VariableLastValueNode() 
+		{
+			lastData = 0;
+		}
+
+		VariableLastValueNode(const unsigned char *data, int _byteLength)
+		{
+			lastData = (char*)rakMalloc_Ex(_byteLength, _FILE_AND_LINE_);
+			memcpy(lastData, data, _byteLength);
+			byteLength = _byteLength;
+			isDirty = false;
+		}
+
 		char *lastData;
 		unsigned int byteLength;
 		bool isDirty;

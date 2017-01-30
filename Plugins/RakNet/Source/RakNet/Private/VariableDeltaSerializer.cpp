@@ -18,9 +18,6 @@ using namespace RakNet;
 VariableDeltaSerializer::VariableDeltaSerializer() {didComparisonThisTick=false;}
 VariableDeltaSerializer::~VariableDeltaSerializer() {RemoveRemoteSystemVariableHistory();}
 
-VariableDeltaSerializer::SerializationContext::SerializationContext() {variableHistoryIdentical=0; variableHistoryUnique=0;}
-VariableDeltaSerializer::SerializationContext::~SerializationContext() {}
-
 void VariableDeltaSerializer::OnMessageReceipt(RakNetGUID guid, uint32_t receiptId, bool messageArrived)
 {
 	// Module?

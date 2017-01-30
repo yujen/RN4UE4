@@ -37,17 +37,3 @@ void VariableListDeltaTracker::FlagDirtyFromBitArray(unsigned char *bArray)
 			variableList[readOffset].isDirty=true;
 	}
 }
-VariableListDeltaTracker::VariableLastValueNode::VariableLastValueNode()
-{
-	lastData=0;
-}
-VariableListDeltaTracker::VariableLastValueNode::VariableLastValueNode(const unsigned char *data, int _byteLength)
-{
-	lastData=(char*) rakMalloc_Ex(_byteLength,_FILE_AND_LINE_);
-	memcpy(lastData,data,_byteLength);
-	byteLength=_byteLength;
-	isDirty=false;
-}
-VariableListDeltaTracker::VariableLastValueNode::~VariableLastValueNode()
-{
-}
