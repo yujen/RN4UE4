@@ -15,14 +15,16 @@
 #include "GetTime.h"
 #include "Rand.h"
 
+#include "Replica.h"
+
 #include "GameFramework/Actor.h"
 #include "RakNetRP.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAllocReplica, FString, receivedString);
+
+
 DECLARE_LOG_CATEGORY_EXTERN(RakNet_RakNetRP, Log, All);
-
-
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReceiveResponse, FString, receivedString);
 
 // ReplicaManager3 is in the namespace RakNet
 using namespace RakNet;
@@ -30,7 +32,7 @@ using namespace RakNet;
 class ReplicaManager3Sample;
 
 UCLASS()
-class RN4UE4_API ARakNetRP : public AActor
+class RN4UE4_API ARakNetRP : public AActor, public ReplicaManager3
 {
 	GENERATED_BODY()
 	
@@ -44,21 +46,25 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
-	UFUNCTION(BlueprintCallable, Category = "RakNet|RakNetRP ")
+	UFUNCTION(BlueprintCallable, Category = "RakNet|RakNetRP")
 		void RPConnect(const FString& host, const int port);
 
-	//UPROPERTY(BlueprintAssignable, Category = "RakNet|RakNetRP")
-	//	FOnReceiveResponse OnReceiveResponse;
-	
+	UFUNCTION(BlueprintCallable, Category = "RakNet|RakNetRP")
+		void RPDisconnect();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Object to spawn")
+		TSubclassOf<AReplica> objectToSpawn;
+
+	AReplica* GetObjectFromType(RakString typeName);
+
+	virtual Connection_RM3* AllocConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID) const;
+	virtual void DeallocConnection(Connection_RM3 *connection) const;
+
 private:
 
-	RakPeerInterface* rakPeer = nullptr;
-	ReplicaManager3Sample* replicaManager = nullptr;
-	// ReplicaManager3 requires NetworkIDManager to lookup pointers from numbers.
-	NetworkIDManager networkIdManager;
-
-	// Holds packets
-	Packet* p = nullptr;
+	RakPeerInterface*		rakPeer				= nullptr;
+	NetworkIDManager		networkIdManager;	// ReplicaManager3 requires NetworkIDManager to lookup pointers from numbers.
+	Packet*					p					= nullptr;// Holds packets
 
 
 	static const int SERVER_PORT = 12345;
