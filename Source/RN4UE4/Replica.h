@@ -25,7 +25,7 @@ using namespace RakNet;
 class SampleReplica : public Replica3
 {
 public:
-	SampleReplica() { var1Unreliable = 0; var2Unreliable = 0; var3Reliable = 0; var4Reliable = 0; }
+	SampleReplica() { posX = 0; posY = 0; posZ = 0; rotX = 0; rotY = 0; rotZ = 0; rotW = 0; }
 	~SampleReplica() {}
 	virtual RakString GetName(void) const = 0;
 	virtual void WriteAllocationID(Connection_RM3 *destinationConnection, BitStream *allocationIdBitstream) const {
@@ -33,15 +33,13 @@ public:
 	}
 	void PrintStringInBitstream(BitStream *bs)
 	{
-		if (bs->GetNumberOfBitsUsed() == 0)
-			return;
+		if (bs->GetNumberOfBitsUsed() == 0) return;
 		RakString rakString;
 		bs->Read(rakString);
-		UE_LOG(RakNet_Replica, Log, TEXT("Receive: %s\n"), rakString.C_String());
 	}
 
-	virtual void SerializeConstruction(BitStream *constructionBitstream, Connection_RM3 *destinationConnection) {
-
+	virtual void SerializeConstruction(BitStream *constructionBitstream, Connection_RM3 *destinationConnection)
+	{
 		// variableDeltaSerializer is a helper class that tracks what variables were sent to what remote system
 		// This call adds another remote system to track
 		variableDeltaSerializer.AddRemoteSystemVariableHistory(destinationConnection->GetRakNetGUID());
@@ -52,8 +50,8 @@ public:
 		PrintStringInBitstream(constructionBitstream);
 		return true;
 	}
-	virtual void SerializeDestruction(BitStream *destructionBitstream, Connection_RM3 *destinationConnection) {
-
+	virtual void SerializeDestruction(BitStream *destructionBitstream, Connection_RM3 *destinationConnection)
+	{
 		// variableDeltaSerializer is a helper class that tracks what variables were sent to what remote system
 		// This call removes a remote system
 		variableDeltaSerializer.RemoveRemoteSystemVariableHistory(destinationConnection->GetRakNetGUID());
@@ -61,11 +59,13 @@ public:
 		destructionBitstream->Write(GetName() + RakString(" SerializeDestruction"));
 
 	}
-	virtual bool DeserializeDestruction(BitStream *destructionBitstream, Connection_RM3 *sourceConnection) {
+	virtual bool DeserializeDestruction(BitStream *destructionBitstream, Connection_RM3 *sourceConnection)
+	{
 		PrintStringInBitstream(destructionBitstream);
 		return true;
 	}
-	virtual void DeallocReplica(Connection_RM3 *sourceConnection) {
+	virtual void DeallocReplica(Connection_RM3 *sourceConnection)
+	{
 		delete this;
 	}
 
@@ -76,68 +76,27 @@ public:
 		variableDeltaSerializer.OnPreSerializeTick();
 	}
 
-	virtual RM3SerializationResult Serialize(SerializeParameters *serializeParameters) {
-
-		VariableDeltaSerializer::SerializationContext serializationContext;
-
-		// Put all variables to be sent unreliably on the same channel, then specify the send type for that channel
-		serializeParameters->pro[0].reliability = UNRELIABLE_WITH_ACK_RECEIPT;
-		// Sending unreliably with an ack receipt requires the receipt number, and that you inform the system of ID_SND_RECEIPT_ACKED and ID_SND_RECEIPT_LOSS
-		serializeParameters->pro[0].sendReceipt = replicaManager->GetRakPeerInterface()->IncrementNextSendReceipt();
-		serializeParameters->messageTimestamp = GetTime();
-
-		// Begin writing all variables to be sent UNRELIABLE_WITH_ACK_RECEIPT 
-		variableDeltaSerializer.BeginUnreliableAckedSerialize(
-			&serializationContext,
-			serializeParameters->destinationConnection->GetRakNetGUID(),
-			&serializeParameters->outputBitstream[0],
-			serializeParameters->pro[0].sendReceipt
-		);
-		// Write each variable
-		variableDeltaSerializer.SerializeVariable(&serializationContext, var1Unreliable);
-		// Write each variable
-		variableDeltaSerializer.SerializeVariable(&serializationContext, var2Unreliable);
-		// Tell the system this is the last variable to be written
-		variableDeltaSerializer.EndSerialize(&serializationContext);
-
-		// All variables to be sent using a different mode go on different channels
-		serializeParameters->pro[1].reliability = RELIABLE_ORDERED;
-
-		// Same as above, all variables to be sent with a particular reliability are sent in a batch
-		// We use BeginIdenticalSerialize instead of BeginSerialize because the reliable variables have the same values sent to all systems. This is memory-saving optimization
-		variableDeltaSerializer.BeginIdenticalSerialize(
-			&serializationContext,
-			serializeParameters->whenLastSerialized == 0,
-			&serializeParameters->outputBitstream[1]
-		);
-		variableDeltaSerializer.SerializeVariable(&serializationContext, var3Reliable);
-		variableDeltaSerializer.SerializeVariable(&serializationContext, var4Reliable);
-		variableDeltaSerializer.EndSerialize(&serializationContext);
-
-		// This return type makes is to ReplicaManager3 itself does not do a memory compare. we entirely control serialization ourselves here.
-		// Use RM3SR_SERIALIZED_ALWAYS instead of RM3SR_SERIALIZED_ALWAYS_IDENTICALLY to support sending different data to different system, which is needed when using unreliable and dirty variable resends
-		return RM3SR_SERIALIZED_ALWAYS;
+	virtual RM3SerializationResult Serialize(SerializeParameters *serializeParameters)
+	{
+		return RM3SR_DO_NOT_SERIALIZE;
 	}
-	virtual void Deserialize(DeserializeParameters *deserializeParameters) {
 
+	virtual void Deserialize(DeserializeParameters *deserializeParameters)
+	{
 		VariableDeltaSerializer::DeserializationContext deserializationContext;
 
 		// Deserialization is written similar to serialization
 		// Note that the Serialize() call above uses two different reliability types. This results in two separate Send calls
 		// So Deserialize is potentially called twice from a single Serialize
 		variableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[0]);
-		if (variableDeltaSerializer.DeserializeVariable(&deserializationContext, var1Unreliable))
-			UE_LOG(RakNet_Replica, Log, TEXT("var1Unreliable changed to %f\n"), var1Unreliable);
-			if (variableDeltaSerializer.DeserializeVariable(&deserializationContext, var2Unreliable))
-				UE_LOG(RakNet_Replica, Log, TEXT("var2Unreliable changed to %f\n"), var2Unreliable);
-				variableDeltaSerializer.EndDeserialize(&deserializationContext);
-
-		variableDeltaSerializer.BeginDeserialize(&deserializationContext, &deserializeParameters->serializationBitstream[1]);
-		if (variableDeltaSerializer.DeserializeVariable(&deserializationContext, var3Reliable))
-			UE_LOG(RakNet_Replica, Log, TEXT("var3Reliable changed to %f\n"), var3Reliable);
-			if (variableDeltaSerializer.DeserializeVariable(&deserializationContext, var4Reliable))
-				UE_LOG(RakNet_Replica, Log, TEXT("var4Reliable changed to %f\n"), var4Reliable);
-				variableDeltaSerializer.EndDeserialize(&deserializationContext);
+		variableDeltaSerializer.DeserializeVariable(&deserializationContext, posX);
+		variableDeltaSerializer.DeserializeVariable(&deserializationContext, posY);
+		variableDeltaSerializer.DeserializeVariable(&deserializationContext, posZ);
+		variableDeltaSerializer.DeserializeVariable(&deserializationContext, rotX);
+		variableDeltaSerializer.DeserializeVariable(&deserializationContext, rotY);
+		variableDeltaSerializer.DeserializeVariable(&deserializationContext, rotZ);
+		variableDeltaSerializer.DeserializeVariable(&deserializationContext, rotW);
+		variableDeltaSerializer.EndDeserialize(&deserializationContext);
 	}
 
 	virtual void SerializeConstructionRequestAccepted(BitStream *serializationBitstream, Connection_RM3 *requestingConnection) {
@@ -168,7 +127,8 @@ public:
 
 	// Demonstrate per-variable synchronization
 	// We manually test each variable to the last synchronized value and only send those values that change
-	float var1Unreliable, var2Unreliable, var3Reliable, var4Reliable;
+	float posX, posY, posZ;
+	float rotX, rotY, rotZ, rotW;
 
 	// Class to save and compare the states of variables this Serialize() to the last Serialize()
 	// If the value is different, true is written to the bitStream, followed by the value. Otherwise false is written.
@@ -208,9 +168,9 @@ public:
 	virtual RM3ActionOnPopConnection QueryActionOnPopConnection(Connection_RM3 *droppedConnection) const {
 		return QueryActionOnPopConnection_Server(droppedConnection);
 	}
-
-	virtual void Deserialize(DeserializeParameters *deserializeParameters);
 	virtual void DeallocReplica(Connection_RM3 *sourceConnection) {
 		Destroy();
 	}
+
+	virtual void Deserialize(DeserializeParameters *deserializeParameters);
 };

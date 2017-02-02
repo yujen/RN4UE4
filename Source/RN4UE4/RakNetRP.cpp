@@ -5,112 +5,8 @@
 
 DEFINE_LOG_CATEGORY(RakNet_RakNetRP);
 
-enum
+class SampleConnection : public Connection_RM3 
 {
-	CLIENT,
-	SERVER,
-	P2P
-} topology;
-
-struct ClientCreatible_ClientSerialized : public SampleReplica {
-	virtual RakString GetName(void) const { return RakString("ClientCreatible_ClientSerialized"); }
-	virtual RM3SerializationResult Serialize(SerializeParameters *serializeParameters)
-	{
-		return SampleReplica::Serialize(serializeParameters);
-	}
-	virtual RM3ConstructionState QueryConstruction(Connection_RM3 *destinationConnection, ReplicaManager3 *replicaManager3) {
-		return QueryConstruction_ClientConstruction(destinationConnection, topology != CLIENT);
-	}
-	virtual bool QueryRemoteConstruction(Connection_RM3 *sourceConnection) {
-		return QueryRemoteConstruction_ClientConstruction(sourceConnection, topology != CLIENT);
-	}
-
-	virtual RM3QuerySerializationResult QuerySerialization(Connection_RM3 *destinationConnection) {
-		return QuerySerialization_ClientSerializable(destinationConnection, topology != CLIENT);
-	}
-	virtual RM3ActionOnPopConnection QueryActionOnPopConnection(Connection_RM3 *droppedConnection) const {
-		return QueryActionOnPopConnection_Client(droppedConnection);
-	}
-};
-struct ServerCreated_ClientSerialized : public SampleReplica {
-	virtual RakString GetName(void) const { return RakString("ServerCreated_ClientSerialized"); }
-	virtual RM3SerializationResult Serialize(SerializeParameters *serializeParameters)
-	{
-		return SampleReplica::Serialize(serializeParameters);
-	}
-	virtual RM3ConstructionState QueryConstruction(Connection_RM3 *destinationConnection, ReplicaManager3 *replicaManager3) {
-		return QueryConstruction_ServerConstruction(destinationConnection, topology != CLIENT);
-	}
-	virtual bool QueryRemoteConstruction(Connection_RM3 *sourceConnection) {
-		return QueryRemoteConstruction_ServerConstruction(sourceConnection, topology != CLIENT);
-	}
-	virtual RM3QuerySerializationResult QuerySerialization(Connection_RM3 *destinationConnection) {
-		return QuerySerialization_ClientSerializable(destinationConnection, topology != CLIENT);
-	}
-	virtual RM3ActionOnPopConnection QueryActionOnPopConnection(Connection_RM3 *droppedConnection) const {
-		return QueryActionOnPopConnection_Server(droppedConnection);
-	}
-};
-struct ClientCreatible_ServerSerialized : public SampleReplica {
-	virtual RakString GetName(void) const { return RakString("ClientCreatible_ServerSerialized"); }
-	virtual RM3SerializationResult Serialize(SerializeParameters *serializeParameters)
-	{
-		if (topology == CLIENT)
-			return RM3SR_DO_NOT_SERIALIZE;
-		return SampleReplica::Serialize(serializeParameters);
-	}
-	virtual RM3ConstructionState QueryConstruction(Connection_RM3 *destinationConnection, ReplicaManager3 *replicaManager3) {
-		return QueryConstruction_ClientConstruction(destinationConnection, topology != CLIENT);
-	}
-	virtual bool QueryRemoteConstruction(Connection_RM3 *sourceConnection) {
-		return QueryRemoteConstruction_ClientConstruction(sourceConnection, topology != CLIENT);
-	}
-	virtual RM3QuerySerializationResult QuerySerialization(Connection_RM3 *destinationConnection) {
-		return QuerySerialization_ServerSerializable(destinationConnection, topology != CLIENT);
-	}
-	virtual RM3ActionOnPopConnection QueryActionOnPopConnection(Connection_RM3 *droppedConnection) const {
-		return QueryActionOnPopConnection_Client(droppedConnection);
-	}
-};
-struct ServerCreated_ServerSerialized : public SampleReplica {
-	virtual RakString GetName(void) const { return RakString("ServerCreated_ServerSerialized"); }
-	virtual RM3SerializationResult Serialize(SerializeParameters *serializeParameters)
-	{
-		if (topology == CLIENT)
-			return RM3SR_DO_NOT_SERIALIZE;
-
-		return SampleReplica::Serialize(serializeParameters);
-	}
-	virtual RM3ConstructionState QueryConstruction(Connection_RM3 *destinationConnection, ReplicaManager3 *replicaManager3) {
-		return QueryConstruction_ServerConstruction(destinationConnection, topology != CLIENT);
-	}
-	virtual bool QueryRemoteConstruction(Connection_RM3 *sourceConnection) {
-		return QueryRemoteConstruction_ServerConstruction(sourceConnection, topology != CLIENT);
-	}
-	virtual RM3QuerySerializationResult QuerySerialization(Connection_RM3 *destinationConnection) {
-		return QuerySerialization_ServerSerializable(destinationConnection, topology != CLIENT);
-	}
-	virtual RM3ActionOnPopConnection QueryActionOnPopConnection(Connection_RM3 *droppedConnection) const {
-		return QueryActionOnPopConnection_Server(droppedConnection);
-	}
-};
-struct P2PReplica : public SampleReplica {
-	virtual RakString GetName(void) const { return RakString("P2PReplica"); }
-	virtual RM3ConstructionState QueryConstruction(Connection_RM3 *destinationConnection, ReplicaManager3 *replicaManager3) {
-		return QueryConstruction_PeerToPeer(destinationConnection);
-	}
-	virtual bool QueryRemoteConstruction(Connection_RM3 *sourceConnection) {
-		return QueryRemoteConstruction_PeerToPeer(sourceConnection);
-	}
-	virtual RM3QuerySerializationResult QuerySerialization(Connection_RM3 *destinationConnection) {
-		return QuerySerialization_PeerToPeer(destinationConnection);
-	}
-	virtual RM3ActionOnPopConnection QueryActionOnPopConnection(Connection_RM3 *droppedConnection) const {
-		return QueryActionOnPopConnection_PeerToPeer(droppedConnection);
-	}
-};
-
-class SampleConnection : public Connection_RM3 {
 public:
 	SampleConnection(const SystemAddress &_systemAddress, RakNetGUID _guid) : Connection_RM3(_systemAddress, _guid) {}
 	virtual ~SampleConnection() {}
@@ -123,17 +19,9 @@ public:
 		ARakNetRP* manager = (ARakNetRP*)replicaManager3;
 		RakString typeName;
 		allocationId->Read(typeName);
-		if (typeName == "ClientCreatible_ClientSerialized") {
-			return manager->GetObjectFromType(typeName);// new ClientCreatible_ClientSerialized;
-		}
-		if (typeName == "ServerCreated_ClientSerialized") return new ServerCreated_ClientSerialized;
-		if (typeName == "ClientCreatible_ServerSerialized") return new ClientCreatible_ServerSerialized;
-		if (typeName == "ServerCreated_ServerSerialized") return new ServerCreated_ServerSerialized;
-		if (typeName == "P2PReplica") return new P2PReplica;
-		return 0;
+		return manager->GetObjectFromType(typeName);
 	}
 };
-
 
 // Sets default values
 ARakNetRP::ARakNetRP()
@@ -153,10 +41,7 @@ void ARakNetRP::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (rakPeer == nullptr)
-	{
-		return;
-	}
+	if (rakPeer == nullptr)	{	return;	}
 
 	for (p = rakPeer->Receive(); p; rakPeer->DeallocatePacket(p), p = rakPeer->Receive())
 	{
@@ -211,7 +96,6 @@ void ARakNetRP::Tick(float DeltaTime)
 					SampleReplica* replica = (SampleReplica*)replicaListOut[idx];
 				}
 			}
-
 		}
 		break;
 		}
@@ -253,11 +137,12 @@ void ARakNetRP::RPDisconnect()
 
 AReplica* ARakNetRP::GetObjectFromType(RakString typeName)
 {
-	// debug 
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::White, TEXT("We spawned an object"));
+	if (typeName == "ServerCreated_ServerSerialized") {
+		// spawn the object 
+		return GetWorld()->SpawnActor<AReplica>(objectToSpawn, FVector::ZeroVector, FRotator::ZeroRotator, FActorSpawnParameters());
+	}
 
-	// spawn the object now 
-	 return GetWorld()->SpawnActor<AReplica>(objectToSpawn, FVector::ZeroVector, FRotator::ZeroRotator, FActorSpawnParameters());
+	return nullptr;
 }
 
 Connection_RM3* ARakNetRP::AllocConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID) const {
