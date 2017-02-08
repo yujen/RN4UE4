@@ -47,7 +47,7 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 	UFUNCTION(BlueprintCallable, Category = "RakNet|RakNetRP")
-		void RPConnect(const FString& host, const int port);
+		void RPConnect(const FString& host, const int port, const FString& host2, const int port2);
 
 	UFUNCTION(BlueprintCallable, Category = "RakNet|RakNetRP")
 		void RPDisconnect();

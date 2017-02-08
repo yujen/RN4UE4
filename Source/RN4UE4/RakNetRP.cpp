@@ -24,7 +24,7 @@ public:
 };
 
 // Sets default values
-ARakNetRP::ARakNetRP()
+ARakNetRP::ARakNetRP() : ReplicaManager3()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -45,16 +45,15 @@ void ARakNetRP::Tick(float DeltaTime)
 
 	for (p = rakPeer->Receive(); p; rakPeer->DeallocatePacket(p), p = rakPeer->Receive())
 	{
-		//UE_LOG(RakNet_RakNetRP, Log, TEXT("PacketRecv:%u"), (unsigned int)p->data[0]);
 		switch (p->data[0])
 		{
 		case ID_CONNECTION_ATTEMPT_FAILED:
 			UE_LOG(RakNet_RakNetRP, Log, TEXT("ID_CONNECTION_ATTEMPT_FAILED\n"));
-			//quit = true;
+			rakPeer->CloseConnection(p->systemAddress, false);
+			//rakPeer->GetConnectionList(SystemAddress *remoteSystems, unsigned short *numberOfSystems)
 			break;
 		case ID_NO_FREE_INCOMING_CONNECTIONS:
 			UE_LOG(RakNet_RakNetRP, Log, TEXT("ID_NO_FREE_INCOMING_CONNECTIONS\n"));
-			//quit = true;
 			break;
 		case ID_CONNECTION_REQUEST_ACCEPTED:
 			UE_LOG(RakNet_RakNetRP, Log, TEXT("ID_CONNECTION_REQUEST_ACCEPTED\n"));
@@ -90,11 +89,6 @@ void ARakNetRP::Tick(float DeltaTime)
 			for (idx = 0; idx < replicaListOut.Size(); idx++)
 			{
 				((SampleReplica*)replicaListOut[idx])->NotifyReplicaOfMessageDeliveryStatus(p->guid, msgNumber, p->data[0] == ID_SND_RECEIPT_ACKED);
-
-				if (idx == 0)
-				{
-					SampleReplica* replica = (SampleReplica*)replicaListOut[idx];
-				}
 			}
 		}
 		break;
@@ -108,19 +102,20 @@ void ARakNetRP::Tick(float DeltaTime)
 	}
 }
 
-void ARakNetRP::RPConnect(const FString& host, const int port)
+void ARakNetRP::RPConnect(const FString& host, const int port, const FString& host2, const int port2)
 {
 	UE_LOG(RakNet_RakNetRP, Log, TEXT("ARakNetRP::RPConnect"));
 
 	rakPeer = RakPeerInterface::GetInstance();
 	SocketDescriptor socketDescriptor(0, 0);
-	rakPeer->Startup(1, &socketDescriptor, 1);
+	rakPeer->Startup(2, &socketDescriptor, 1);
 
 	// Start RakNet, up to 32 connections if the server
 	rakPeer->AttachPlugin(this);
 	SetNetworkIDManager(&networkIdManager);
 	rakPeer->SetMaximumIncomingConnections(32);
 	rakPeer->Connect(TCHAR_TO_ANSI(*host), port, nullptr, 0);
+	rakPeer->Connect(TCHAR_TO_ANSI(*host2), port2, nullptr, 0);
 }
 
 void ARakNetRP::RPDisconnect()
