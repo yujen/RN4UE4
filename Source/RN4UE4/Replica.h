@@ -202,4 +202,6 @@ public:
 
 	virtual bool DeserializeConstruction(BitStream *constructionBitstream, Connection_RM3 *sourceConnection);
 	virtual void Deserialize(DeserializeParameters *deserializeParameters);
+
+	void UpdateTransform();
 };
