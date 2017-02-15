@@ -25,10 +25,51 @@ void AReplica::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 }
 
+bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connection_RM3 *sourceConnection)
+{
+	constructionBitstream->Read(geom);
+	UStaticMeshComponent* SphereVisual = ConstructObject<UStaticMeshComponent>(UStaticMeshComponent::StaticClass(), 
+		this, TEXT("Geom"));
+	SphereVisual->RegisterComponent();
+	SphereVisual->AttachTo(GetRootComponent());
+
+	switch (geom)
+	{
+	case PxGeometryType::eSPHERE:
+		SphereVisual->SetStaticMesh(sphereMesh);
+		//SphereVisual->SetRelativeLocation(FVector(0.0f, -0.5f, 0.0f));
+		break;
+	case PxGeometryType::ePLANE:
+		break;
+	case PxGeometryType::eCAPSULE:
+		SphereVisual->SetStaticMesh(capsuleMesh);
+		break;
+	case PxGeometryType::eBOX:
+		SphereVisual->SetStaticMesh(cubeMesh);
+		break;
+	case PxGeometryType::eCONVEXMESH:
+		break;
+	case PxGeometryType::eTRIANGLEMESH:
+		break;
+	case PxGeometryType::eHEIGHTFIELD:
+		break;
+	case PxGeometryType::eGEOMETRY_COUNT:
+		break;
+	case PxGeometryType::eINVALID:
+		break;
+	default:
+		break;
+	}
+
+	SphereVisual->SetWorldScale3D(FVector(1.0f));
+
+	return SampleReplica::DeserializeConstruction(constructionBitstream, sourceConnection);
+}
+
 void AReplica::Deserialize(DeserializeParameters *deserializeParameters) 
 {
 	SampleReplica::Deserialize(deserializeParameters);
 	FQuat rot = FQuat(rotX, rotY, rotZ, rotW);
-	FTransform transform = FTransform(FRotator(rot), FVector(posX, posY, posZ), FVector(1,1,1));
+	FTransform transform = FTransform(FRotator(rot), FVector(posX * 10.0f, posZ * 10.0f, posY * 10.0f), FVector(1,1,1));
 	SetActorTransform(transform, false, nullptr, ETeleportType::TeleportPhysics);
 }

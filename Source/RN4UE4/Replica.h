@@ -22,6 +22,23 @@ DECLARE_LOG_CATEGORY_EXTERN(RakNet_Replica, Log, All);
 
 using namespace RakNet;
 
+struct PxGeometryType
+{
+	enum Enum
+	{
+		eSPHERE,
+		ePLANE,
+		eCAPSULE,
+		eBOX,
+		eCONVEXMESH,
+		eTRIANGLEMESH,
+		eHEIGHTFIELD,
+
+		eGEOMETRY_COUNT,	//!< internal use only!
+		eINVALID = -1		//!< internal use only!
+	};
+};
+
 class SampleReplica : public Replica3
 {
 public:
@@ -125,10 +142,12 @@ public:
 		variableDeltaSerializer.OnMessageReceipt(guid, receiptId, messageArrived);
 	}
 
+protected:
 	// Demonstrate per-variable synchronization
 	// We manually test each variable to the last synchronized value and only send those values that change
 	float posX, posY, posZ;
 	float rotX, rotY, rotZ, rotW;
+	PxGeometryType::Enum geom;
 
 	// Class to save and compare the states of variables this Serialize() to the last Serialize()
 	// If the value is different, true is written to the bitStream, followed by the value. Otherwise false is written.
@@ -151,6 +170,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
+	UPROPERTY(EditDefaultsOnly, Category = "SphereMesh")
+	UStaticMesh* sphereMesh;
+
+	UPROPERTY(EditDefaultsOnly, Category = "CubeMesh")
+	UStaticMesh* cubeMesh;
+
+	UPROPERTY(EditDefaultsOnly, Category = "CapsuleMesh")
+	UStaticMesh* capsuleMesh;
+
 	virtual RakString GetName(void) const { return RakString("ServerCreated_ServerSerialized"); }
 	virtual RM3SerializationResult Serialize(SerializeParameters *serializeParameters)
 	{
@@ -172,5 +200,6 @@ public:
 		Destroy();
 	}
 
+	virtual bool DeserializeConstruction(BitStream *constructionBitstream, Connection_RM3 *sourceConnection);
 	virtual void Deserialize(DeserializeParameters *deserializeParameters);
 };
