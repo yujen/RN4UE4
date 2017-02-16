@@ -28,10 +28,10 @@ void AReplica::Tick(float DeltaTime)
 bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connection_RM3 *sourceConnection)
 {
 	constructionBitstream->Read(geom);
-	UStaticMeshComponent* visual = ConstructObject<UStaticMeshComponent>(UStaticMeshComponent::StaticClass(),
-		this, TEXT("Geom"));
+	UStaticMeshComponent* visual = NewObject<UStaticMeshComponent>(this, UStaticMeshComponent::StaticClass(),
+		TEXT("Geom"));
 	visual->RegisterComponent();
-	visual->AttachTo(GetRootComponent());
+	visual->AttachToComponent(GetRootComponent(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
 
 	switch (geom)
 	{
