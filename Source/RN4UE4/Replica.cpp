@@ -28,24 +28,32 @@ void AReplica::Tick(float DeltaTime)
 bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connection_RM3 *sourceConnection)
 {
 	constructionBitstream->Read(geom);
-	UStaticMeshComponent* visual = NewObject<UStaticMeshComponent>(this, UStaticMeshComponent::StaticClass(),
-		TEXT("Geom"));
-	visual->RegisterComponent();
-	visual->AttachToComponent(GetRootComponent(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true));
+	AActor* visual = nullptr;
 
 	switch (geom)
 	{
 	case PxGeometryType::eSPHERE:
-		visual->SetStaticMesh(sphereMesh);
-		//SphereVisual->SetRelativeLocation(FVector(0.0f, -0.5f, 0.0f));
+	{
+		if (sphereBP == nullptr) break;
+
+		visual = GetWorld()->SpawnActor<AActor>(sphereBP, GetTransform(), FActorSpawnParameters());
+	}
 		break;
 	case PxGeometryType::ePLANE:
 		break;
 	case PxGeometryType::eCAPSULE:
-		visual->SetStaticMesh(capsuleMesh);
+	{
+		if (capsuleBP == nullptr) break;
+
+		visual = GetWorld()->SpawnActor<AActor>(capsuleBP, GetTransform(), FActorSpawnParameters());
+	}
 		break;
 	case PxGeometryType::eBOX:
-		visual->SetStaticMesh(cubeMesh);
+	{
+		if (boxBP == nullptr) break;
+
+		visual = GetWorld()->SpawnActor<AActor>(boxBP, GetTransform(), FActorSpawnParameters());
+	}
 		break;
 	case PxGeometryType::eCONVEXMESH:
 		break;
@@ -61,7 +69,7 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 		break;
 	}
 
-	visual->SetWorldScale3D(FVector(1.0f));
+	if (visual != nullptr) visual->AttachRootComponentToActor(this, NAME_None, EAttachLocation::SnapToTarget, true);
 
 	constructionBitstream->Read(posX);
 	constructionBitstream->Read(posY);
@@ -84,6 +92,7 @@ void AReplica::Deserialize(DeserializeParameters *deserializeParameters)
 void AReplica::UpdateTransform()
 {
 	FQuat rot = FQuat(rotX, rotY, rotZ, rotW);
-	FTransform transform = FTransform(FRotator(rot), FVector(posX * 10.0f, posZ * 10.0f, posY * 10.0f), FVector(1, 1, 1));
+	rot *= FQuat(FVector(1, 0, 0), PI * -0.5f);
+	FTransform transform = FTransform(FRotator(rot), FVector(posX * 100.0f, posZ * 100.0f, posY * 100.0f), FVector(1, 1, 1));
 	SetActorTransform(transform, false, nullptr, ETeleportType::TeleportPhysics);
 }

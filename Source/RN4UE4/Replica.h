@@ -170,14 +170,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
-	UPROPERTY(EditDefaultsOnly, Category = "SphereMesh")
-	UStaticMesh* sphereMesh;
+	UPROPERTY(EditDefaultsOnly, Category = "SphereBP")
+		UClass* sphereBP;
 
-	UPROPERTY(EditDefaultsOnly, Category = "CubeMesh")
-	UStaticMesh* cubeMesh;
+	UPROPERTY(EditDefaultsOnly, Category = "BoxBP")
+		UClass* boxBP;
 
-	UPROPERTY(EditDefaultsOnly, Category = "CapsuleMesh")
-	UStaticMesh* capsuleMesh;
+	UPROPERTY(EditDefaultsOnly, Category = "CapsuleBP")
+		UClass* capsuleBP;
 
 	virtual RakString GetName(void) const { return RakString("ServerCreated_ServerSerialized"); }
 	virtual RM3SerializationResult Serialize(SerializeParameters *serializeParameters)
