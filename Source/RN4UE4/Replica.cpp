@@ -69,7 +69,7 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 		break;
 	}
 
-	if (visual != nullptr) visual->AttachRootComponentToActor(this, NAME_None, EAttachLocation::SnapToTarget, true);
+	if (visual != nullptr) visual->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
 
 	constructionBitstream->Read(posX);
 	constructionBitstream->Read(posY);
@@ -91,8 +91,19 @@ void AReplica::Deserialize(DeserializeParameters *deserializeParameters)
 
 void AReplica::UpdateTransform()
 {
+	float	matrixElements[16] = {
+		1,  0, 0, 0,
+		0,  0, 1, 0,
+		0,  1, 0, 0,
+		0,  0, 0, 1
+	};
+
+	FMatrix conversionMatrix = FMatrix();
+	memcpy(conversionMatrix.M, matrixElements, 16 * sizeof(float));
+
 	FQuat rot = FQuat(rotX, rotY, rotZ, rotW);
-	rot *= FQuat(FVector(1, 0, 0), PI * -0.5f);
-	FTransform transform = FTransform(FRotator(rot), FVector(posX * 100.0f, posZ * 100.0f, posY * 100.0f), FVector(1, 1, 1));
+	FVector pos = FVector(posX, posY, posZ) * 50.0f;
+	FTransform transform = FTransform(FRotator(rot), pos, FVector(1, 1, 1));
+	transform *= FTransform(conversionMatrix);
 	SetActorTransform(transform, false, nullptr, ETeleportType::TeleportPhysics);
 }
