@@ -91,6 +91,7 @@ void AReplica::Deserialize(DeserializeParameters *deserializeParameters)
 
 void AReplica::UpdateTransform()
 {
+	// Conversion matrix from PhysX to Unreal
 	float	matrixElements[16] = {
 		1,  0, 0, 0,
 		0,  0, 1, 0,
@@ -101,9 +102,10 @@ void AReplica::UpdateTransform()
 	FMatrix conversionMatrix = FMatrix();
 	memcpy(conversionMatrix.M, matrixElements, 16 * sizeof(float));
 
-	FQuat rot = FQuat(rotX, rotY, rotZ, rotW);
-	FVector pos = FVector(posX, posY, posZ) * 50.0f;
-	FTransform transform = FTransform(FRotator(rot), pos, FVector(1, 1, 1));
+	FQuat	rot		= FQuat(rotX, rotY, rotZ, rotW);
+	FVector pos		= FVector(posX, posY, posZ) * 50.0f;
+	FVector scale	= FVector(-1, 1, 1);					// X will get negated, so set scale to -1, so final result is 1
+	FTransform transform = FTransform(FRotator(rot), pos, scale);
 	transform *= FTransform(conversionMatrix);
 	SetActorTransform(transform, false, nullptr, ETeleportType::TeleportPhysics);
 }
