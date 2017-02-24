@@ -179,6 +179,15 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "CapsuleBP")
 		UClass* capsuleBP;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Server0Material")
+		UMaterial* server0Material;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Server1Material")
+		UMaterial* server1Material;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UnknownMaterial")
+		UMaterial* unknownMaterial;
+
 	virtual RakString GetName(void) const { return RakString("ServerCreated_ServerSerialized"); }
 	virtual RM3SerializationResult Serialize(SerializeParameters *serializeParameters)
 	{
@@ -202,6 +211,11 @@ public:
 
 	virtual bool DeserializeConstruction(BitStream *constructionBitstream, Connection_RM3 *sourceConnection);
 	virtual void Deserialize(DeserializeParameters *deserializeParameters);
+	virtual bool DeserializeDestruction(BitStream *destructionBitstream, Connection_RM3 *sourceConnection);
 
 	void UpdateTransform();
+	void SetMaterial(int32 elementIndex, UMaterialInterface* inMaterial);
+
+private:
+	AActor* visual = nullptr;
 };

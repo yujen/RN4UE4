@@ -28,7 +28,6 @@ void AReplica::Tick(float DeltaTime)
 bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connection_RM3 *sourceConnection)
 {
 	constructionBitstream->Read(geom);
-	AActor* visual = nullptr;
 
 	switch (geom)
 	{
@@ -80,6 +79,19 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 	constructionBitstream->Read(rotW);
 	UpdateTransform();
 
+	if (replicaManager->GetConnectionAtIndex(0) == sourceConnection)
+	{
+		SetMaterial(0, server0Material);
+	}
+	else if (replicaManager->GetConnectionCount() > 1 && replicaManager->GetConnectionAtIndex(1) == sourceConnection)
+	{
+		SetMaterial(0, server1Material);
+	}
+	else
+	{
+		SetMaterial(0, unknownMaterial);
+	}
+
 	return SampleReplica::DeserializeConstruction(constructionBitstream, sourceConnection);
 }
 
@@ -87,6 +99,13 @@ void AReplica::Deserialize(DeserializeParameters *deserializeParameters)
 {
 	SampleReplica::Deserialize(deserializeParameters);
 	UpdateTransform();
+}
+
+
+bool AReplica::DeserializeDestruction(BitStream *destructionBitstream, Connection_RM3 *sourceConnection)
+{
+	visual->Destroy();
+	return true;
 }
 
 void AReplica::UpdateTransform()
@@ -108,4 +127,15 @@ void AReplica::UpdateTransform()
 	FTransform transform = FTransform(FRotator(rot), pos, scale);
 	transform *= FTransform(conversionMatrix);
 	SetActorTransform(transform, false, nullptr, ETeleportType::TeleportPhysics);
+}
+
+void AReplica::SetMaterial(int32 elementIndex, UMaterialInterface* inMaterial)
+{
+	TArray<UStaticMeshComponent*> components;
+	visual->GetComponents<UStaticMeshComponent>(components);
+	for (int32 i = 0; i < components.Num(); i++)
+	{
+		UStaticMeshComponent* StaticMeshComponent = components[i];
+		StaticMeshComponent->SetMaterial(elementIndex, inMaterial);
+	}
 }
