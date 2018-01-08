@@ -35,7 +35,7 @@ public:
 
 protected:
 #ifdef _WIN32
-	volatile LONG value;
+	volatile int64 value;
 #elif defined(ANDROID) || defined(__S3E__) || defined(__APPLE__)
 	// __sync_fetch_and_add not supported apparently
 	SimpleMutex mutex;

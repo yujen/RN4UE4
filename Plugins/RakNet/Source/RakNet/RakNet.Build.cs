@@ -4,8 +4,8 @@ using UnrealBuildTool;
 
 public class RakNet : ModuleRules
 {
-    public RakNet(TargetInfo Target)
-    {
+    public RakNet(ReadOnlyTargetRules Target) : base(Target)
+	{
 
         PublicIncludePaths.AddRange(new string[]
         {
