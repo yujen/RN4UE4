@@ -12,10 +12,11 @@
 /// \brief SocketLayer class implementation
 ///
 
+#include "SocketLayer.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "SocketLayer.h"
 #include "RakAssert.h"
 #include "RakNetTypes.h"
 #include "RakPeer.h"

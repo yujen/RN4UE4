@@ -8,10 +8,10 @@
  *
  */
 
+#include "CCRakNetUDT.h"
 #include "RakNetPrivatePCH.h"
 
 
-#include "CCRakNetUDT.h"
 
 #if USE_SLIDING_WINDOW_CONGESTION_CONTROL!=1
 

@@ -8,13 +8,16 @@
  *
  */
 
+#if _RAKNET_SUPPORT_CloudServer==1
+#include "CloudServer.h"
+#endif
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_CloudServer==1
 
-#include "CloudServer.h"
 #include "GetTime.h"
 #include "MessageIdentifiers.h"
 #include "BitStream.h"

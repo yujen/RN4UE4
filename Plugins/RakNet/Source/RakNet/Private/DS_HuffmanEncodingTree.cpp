@@ -8,10 +8,11 @@
  *
  */
 
+#include "DS_HuffmanEncodingTree.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "DS_HuffmanEncodingTree.h"
 #include "DS_Queue.h"
 #include "BitStream.h"
 #include "RakAssert.h" 

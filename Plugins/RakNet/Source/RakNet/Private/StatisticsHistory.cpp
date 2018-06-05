@@ -8,13 +8,14 @@
  *
  */
 
+#include "StatisticsHistory.h"
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_StatisticsHistory==1
 
-#include "StatisticsHistory.h"
 #include "GetTime.h"
 #include "RakNetStatistics.h"
 #include "RakPeerInterface.h"

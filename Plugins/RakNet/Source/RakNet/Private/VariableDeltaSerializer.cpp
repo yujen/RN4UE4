@@ -8,10 +8,11 @@
  *
  */
 
+#include "VariableDeltaSerializer.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "VariableDeltaSerializer.h"
 
 using namespace RakNet;
 

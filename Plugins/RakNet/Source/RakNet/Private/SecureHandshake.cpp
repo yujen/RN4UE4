@@ -11,6 +11,8 @@
 /// \file
 ///
 
+#include "SecureHandshake.h"
+
 #include "RakNetPrivatePCH.h"
 
 

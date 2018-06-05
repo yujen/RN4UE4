@@ -17,7 +17,15 @@
 
 #include "Replica.h"
 
+//#include <stdio.h>
+//#include "Kbhit.h"
+//#include <string.h>
+//#include <stdlib.h>
+//#include "RakSleep.h"
+//#include "Gets.h"
+
 #include "GameFramework/Actor.h"
+#include "RPC4Plugin.h"
 #include "RakNetRP.generated.h"
 
 
@@ -52,6 +60,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "RakNet|RakNetRP")
 		void RPDisconnect();
 
+	UFUNCTION(BlueprintCallable, Category = "RakNet|RakNetRP")
+		void RPrpcTest(FVector pos, FVector dir);
+
 	UPROPERTY(EditDefaultsOnly, Category = "Object to spawn")
 		TSubclassOf<AReplica> objectToSpawn;
 
@@ -65,6 +76,8 @@ private:
 	RakPeerInterface*		rakPeer				= nullptr;
 	NetworkIDManager		networkIdManager;	// ReplicaManager3 requires NetworkIDManager to lookup pointers from numbers.
 	Packet*					p					= nullptr;// Holds packets
+	
+	RPC4 rpc;
 
 
 	static const int SERVER_PORT = 12345;

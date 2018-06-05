@@ -8,13 +8,14 @@
  *
  */
 
+#include "UDPProxyClient.h"
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_UDPProxyClient==1
 
-#include "UDPProxyClient.h"
 #include "BitStream.h"
 #include "UDPProxyCommon.h"
 #include "RakPeerInterface.h"

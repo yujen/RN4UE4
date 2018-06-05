@@ -11,10 +11,10 @@
 /// \file
 ///
 
+#include "NetworkIDManager.h"
 #include "RakNetPrivatePCH.h"
 
 
-#include "NetworkIDManager.h"
 #include "NetworkIDObject.h"
 #include "RakAssert.h"
 #include "GetTime.h"

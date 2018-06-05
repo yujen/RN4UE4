@@ -11,10 +11,11 @@
 /// \file
 ///
 
+#include "SimpleMutex.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "SimpleMutex.h"
 #include "RakAssert.h"
 
 using namespace RakNet;

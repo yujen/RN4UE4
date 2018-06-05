@@ -8,10 +8,11 @@
  *
  */
 
+#include "TableSerializer.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "TableSerializer.h"
 #include "DS_Table.h"
 #include "BitStream.h"
 #include "StringCompressor.h"

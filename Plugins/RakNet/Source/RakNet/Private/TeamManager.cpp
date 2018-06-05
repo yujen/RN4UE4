@@ -8,13 +8,14 @@
  *
  */
 
+#include "TeamManager.h"
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_TeamManager==1
 
-#include "TeamManager.h"
 #include "BitStream.h"
 #include "MessageIdentifiers.h"
 #include "GetTime.h"

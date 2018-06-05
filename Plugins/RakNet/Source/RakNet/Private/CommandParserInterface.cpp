@@ -8,10 +8,10 @@
  *
  */
 
+#include "CommandParserInterface.h"
 #include "RakNetPrivatePCH.h"
 
 
-#include "CommandParserInterface.h"
 #include "TransportInterface.h"
 //#include <string.h>
 #include "RakAssert.h"

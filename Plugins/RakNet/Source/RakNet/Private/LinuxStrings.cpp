@@ -8,6 +8,7 @@
  *
  */
 
+#include "LinuxStrings.h"
 #include "RakNetPrivatePCH.h"
 
 

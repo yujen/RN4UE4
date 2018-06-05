@@ -2,6 +2,7 @@
 
 #include "RN4UE4.h"
 #include "Replica.h"
+#include "Editor.h"
 
 DEFINE_LOG_CATEGORY(RakNet_Replica);
 
@@ -28,6 +29,9 @@ void AReplica::Tick(float DeltaTime)
 bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connection_RM3 *sourceConnection)
 {
 	constructionBitstream->Read(geom);
+	FActorSpawnParameters Parameters = FActorSpawnParameters();
+	Parameters.bDeferConstruction = true;
+	Parameters.bNoFail = true;
 
 	switch (geom)
 	{
@@ -35,7 +39,7 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 	{
 		if (sphereBP == nullptr) break;
 
-		visual = GetWorld()->SpawnActor<AActor>(sphereBP, GetTransform(), FActorSpawnParameters());
+		Parameters.Template = sphereBP;
 	}
 		break;
 	case PxGeometryType::ePLANE:
@@ -44,14 +48,14 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 	{
 		if (capsuleBP == nullptr) break;
 
-		visual = GetWorld()->SpawnActor<AActor>(capsuleBP, GetTransform(), FActorSpawnParameters());
+		Parameters.Template = capsuleBP;
 	}
 		break;
 	case PxGeometryType::eBOX:
 	{
 		if (boxBP == nullptr) break;
 
-		visual = GetWorld()->SpawnActor<AActor>(boxBP, GetTransform(), FActorSpawnParameters());
+		Parameters.Template = boxBP;
 	}
 		break;
 	case PxGeometryType::eCONVEXMESH:
@@ -67,6 +71,13 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 	default:
 		break;
 	}
+
+	//visual = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), GetTransform(), Parameters);
+	//const FVector* Location = &GetTransform().GetLocation();
+	//const FRotator* Rotator = &GetTransform().GetRotation().Rotator();
+	visual = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), GetTransform(), Parameters);
+	//visual = GetWorld()->SpawnActor<AStaticMeshActor>(GetTransform().GetLocation(), GetTransform().GetRotation(), NULL, Instigator, true);
+	//GEditor->AddActor();
 
 	if (visual != nullptr) visual->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
 

@@ -8,10 +8,10 @@
  *
  */
 
+#include "VariableListDeltaTracker.h"
+
 #include "RakNetPrivatePCH.h"
 
-
-#include "VariableListDeltaTracker.h"
 
 using namespace RakNet;
 

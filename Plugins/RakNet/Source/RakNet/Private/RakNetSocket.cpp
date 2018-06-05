@@ -8,11 +8,11 @@
  *
  */
 
+#include "RakNetSocket.h"
 #include "RakNetPrivatePCH.h"
 
 
 /*
-#include "RakNetSocket.h"
 #include "RakMemoryOverride.h"
 
 using namespace RakNet;

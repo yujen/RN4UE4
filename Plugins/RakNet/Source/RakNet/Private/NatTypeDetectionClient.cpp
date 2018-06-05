@@ -8,13 +8,15 @@
  *
  */
 
+#if _RAKNET_SUPPORT_NatTypeDetectionClient==1
+#include "NatTypeDetectionClient.h"
+#endif
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_NatTypeDetectionClient==1
-
-#include "NatTypeDetectionClient.h"
 #include "RakNetSmartPtr.h"
 #include "BitStream.h"
 #include "SocketIncludes.h"

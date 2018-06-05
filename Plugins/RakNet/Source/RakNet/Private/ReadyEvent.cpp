@@ -8,13 +8,14 @@
  *
  */
 
+#include "ReadyEvent.h"
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_ReadyEvent==1
 
-#include "ReadyEvent.h"
 #include "RakPeerInterface.h"
 #include "BitStream.h"
 #include "MessageIdentifiers.h"

@@ -11,6 +11,10 @@
 /// \file
 ///
 
+#if _RAKNET_SUPPORT_FullyConnectedMesh2==1
+#include "FullyConnectedMesh2.h"
+#endif
+
 #include "RakNetPrivatePCH.h"
 
 

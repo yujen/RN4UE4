@@ -8,10 +8,10 @@
  *
  */
 
+#include "UDPForwarder.h"
+
 #include "RakNetPrivatePCH.h"
 
-
-#include "UDPForwarder.h"
 
 #if _RAKNET_SUPPORT_UDPForwarder==1
 

@@ -8,12 +8,12 @@
  *
  */
 
+#include "PacketFileLogger.h"
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_PacketLogger==1
-#include "PacketFileLogger.h"
 #include "GetTime.h"
 
 using namespace RakNet;

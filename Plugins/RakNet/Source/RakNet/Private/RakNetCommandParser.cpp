@@ -8,13 +8,13 @@
  *
  */
 
+#include "RakNetCommandParser.h"
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_RakNetCommandParser==1
 
-#include "RakNetCommandParser.h"
 #include "TransportInterface.h"
 #include "RakPeerInterface.h"
 #include "BitStream.h"

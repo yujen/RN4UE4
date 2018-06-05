@@ -11,10 +11,11 @@
 /// \file
 ///
 
+#include "RakNetTypes.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "RakNetTypes.h"
 #include "RakAssert.h"
 //#include <string.h>
 //#include <stdio.h>

@@ -14,10 +14,10 @@
 * 
 */
 
+#include "CheckSum.h"
 #include "RakNetPrivatePCH.h"
 
 
-#include "CheckSum.h"
 
 /****************************************************************************
 *        CheckSum::add

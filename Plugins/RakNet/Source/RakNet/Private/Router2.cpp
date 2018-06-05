@@ -8,13 +8,14 @@
  *
  */
 
+#include "Router2.h"
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_Router2==1 && _RAKNET_SUPPORT_UDPForwarder==1
 
-#include "Router2.h"
 #include "RakPeerInterface.h"
 #include "BitStream.h"
 #include "RakNetTime.h"

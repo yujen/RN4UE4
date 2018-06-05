@@ -8,6 +8,10 @@
  *
  */
 
+#if _RAKNET_SUPPORT_DynDNS==1 && _RAKNET_SUPPORT_TCPInterface==1
+#include "DynDNS.h"
+#endif
+
 #include "RakNetPrivatePCH.h"
 
 
@@ -16,7 +20,6 @@
 
 #include "TCPInterface.h"
 #include "RakNetSocket2.h"
-#include "DynDNS.h"
 #include "GetTime.h"
 #include "Base64Encoder.h"
 

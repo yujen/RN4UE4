@@ -8,6 +8,13 @@
  *
  */
 
+#if   defined(_WIN32)
+ //#include <conio.h> /* getche() */
+#elif  defined(__S3E__)
+#else
+#include "Getche.h"
+#endif
+
 #include "RakNetPrivatePCH.h"
 
 
@@ -16,8 +23,6 @@
 #elif  defined(__S3E__)
 
 #else
-
-#include "Getche.h"
 
 char getche()
 {

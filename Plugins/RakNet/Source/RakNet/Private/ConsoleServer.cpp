@@ -8,6 +8,10 @@
  *
  */
 
+#if _RAKNET_SUPPORT_ConsoleServer==1
+#include "ConsoleServer.h"
+#endif
+
 #include "RakNetPrivatePCH.h"
 
 

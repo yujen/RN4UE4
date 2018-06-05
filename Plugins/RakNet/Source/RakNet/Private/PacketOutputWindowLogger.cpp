@@ -8,6 +8,7 @@
  *
  */
 
+#include "PacketOutputWindowLogger.h"
 #include "RakNetPrivatePCH.h"
 
 
@@ -18,7 +19,6 @@
 #include "RakWString.h"
 #endif
 
-#include "PacketOutputWindowLogger.h"
 #include "RakString.h"
 #if defined(_WIN32)
 #include "WindowsIncludes.h"

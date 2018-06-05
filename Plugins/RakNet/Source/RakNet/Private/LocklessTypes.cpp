@@ -8,10 +8,10 @@
  *
  */
 
+#include "LocklessTypes.h"
 #include "RakNetPrivatePCH.h"
 
 
-#include "LocklessTypes.h"
 
 using namespace RakNet;
 

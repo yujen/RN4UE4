@@ -8,10 +8,11 @@
  *
  */
 
+#include "VariadicSQLParser.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "VariadicSQLParser.h"
 #include "BitStream.h"
 //#include <stdarg.h>
 

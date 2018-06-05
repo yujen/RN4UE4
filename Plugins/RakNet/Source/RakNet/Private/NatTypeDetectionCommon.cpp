@@ -8,10 +8,10 @@
  *
  */
 
+#include "NatTypeDetectionCommon.h"
 #include "RakNetPrivatePCH.h"
 
 
-#include "NatTypeDetectionCommon.h"
 
 #if _RAKNET_SUPPORT_NatTypeDetectionServer==1 || _RAKNET_SUPPORT_NatTypeDetectionClient==1
 

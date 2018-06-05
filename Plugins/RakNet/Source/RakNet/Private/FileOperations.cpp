@@ -8,10 +8,11 @@
  *
  */
 
+#include "FileOperations.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "FileOperations.h"
 #if _RAKNET_SUPPORT_FileOperations==1
 #include "RakMemoryOverride.h"
 #include "_FindFirst.h" // For linux

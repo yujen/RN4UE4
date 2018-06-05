@@ -11,6 +11,7 @@
 /// \file
 ///
 
+#include "BitStream.h"
 #include "RakNetPrivatePCH.h"
 
 
@@ -18,7 +19,6 @@
 #include "BitStream_NoTemplate.cpp"
 #else
 
-#include "BitStream.h"
 //#include <stdio.h>
 //#include <string.h>
 //#include <stdlib.h>

@@ -8,10 +8,11 @@
  *
  */
 
+#include "SuperFastHash.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "SuperFastHash.h"
 #include "NativeTypes.h"
 //#include <stdlib.h>
 

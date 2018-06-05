@@ -8,10 +8,11 @@
  *
  */
 
+#include "FileList.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "FileList.h"
 
 #if _RAKNET_SUPPORT_FileOperations==1
 

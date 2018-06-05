@@ -8,10 +8,10 @@
  *
  */
 
+#include "WSAStartupSingleton.h"
+
 #include "RakNetPrivatePCH.h"
 
-
-#include "WSAStartupSingleton.h"
 
 
 

@@ -11,10 +11,11 @@
 /// \file
 ///
 
+#include "StringCompressor.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "StringCompressor.h"
 #include "DS_HuffmanEncodingTree.h"
 #include "BitStream.h"
 #include "RakString.h"

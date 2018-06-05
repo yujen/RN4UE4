@@ -8,10 +8,10 @@
  *
  */
 
+#include "CCRakNetSlidingWindow.h"
 #include "RakNetPrivatePCH.h"
 
 
-#include "CCRakNetSlidingWindow.h"
 
 #if USE_SLIDING_WINDOW_CONGESTION_CONTROL==1
 

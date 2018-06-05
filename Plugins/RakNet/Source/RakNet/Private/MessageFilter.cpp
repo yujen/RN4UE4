@@ -8,13 +8,15 @@
  *
  */
 
+#if _RAKNET_SUPPORT_MessageFilter==1
+#include "MessageFilter.h"
+#endif
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_MessageFilter==1
-
-#include "MessageFilter.h"
 #include "RakAssert.h"
 #include "GetTime.h"
 #include "MessageIdentifiers.h"

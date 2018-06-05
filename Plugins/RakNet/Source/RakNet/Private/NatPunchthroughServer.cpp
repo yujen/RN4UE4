@@ -8,13 +8,15 @@
  *
  */
 
+#if _RAKNET_SUPPORT_NatPunchthroughServer==1
+#include "NatPunchthroughServer.h"
+#endif
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_NatPunchthroughServer==1
-
-#include "NatPunchthroughServer.h"
 #include "SocketLayer.h"
 #include "BitStream.h"
 #include "MessageIdentifiers.h"

@@ -8,10 +8,11 @@
  *
  */
 
+#include "SignaledEvent.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "SignaledEvent.h"
 #include "RakAssert.h"
 #include "RakSleep.h"
 

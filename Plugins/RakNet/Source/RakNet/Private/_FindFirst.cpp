@@ -3,11 +3,12 @@
 * Should emulate windows finddata structure
 */
 
+#include "_FindFirst.h"
+
 #include "RakNetPrivatePCH.h"
 
 
 #if (defined(__GNUC__)  || defined(__GCCXML__)) && !defined(_WIN32)
-#include "_FindFirst.h"
 #include "DS_List.h"
 
 #include <sys/stat.h>

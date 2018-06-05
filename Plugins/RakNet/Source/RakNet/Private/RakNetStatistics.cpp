@@ -11,10 +11,11 @@
 /// \file
 ///
 
+#include "RakNetStatistics.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "RakNetStatistics.h"
 //#include <stdio.h> // sprintf
 #include "GetTime.h"
 #include "RakString.h"

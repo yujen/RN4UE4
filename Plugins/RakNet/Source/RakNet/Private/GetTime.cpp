@@ -11,6 +11,8 @@
 /// \file
 ///
 
+#include "GetTime.h"
+
 #include "RakNetPrivatePCH.h"
 
 
@@ -25,7 +27,6 @@
 
 #endif
 
-#include "GetTime.h"
 
 
 

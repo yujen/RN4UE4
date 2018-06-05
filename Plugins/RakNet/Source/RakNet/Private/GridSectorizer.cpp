@@ -8,11 +8,12 @@
  *
  */
 
+#include "GridSectorizer.h"
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "RakAssert.h"
-#include "GridSectorizer.h"
 //#include <stdlib.h>
 //#include <math.h>
 

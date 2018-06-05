@@ -8,10 +8,10 @@
  *
  */
 
+#include "RakMemoryOverride.h"
 #include "RakNetPrivatePCH.h"
 
 
-#include "RakMemoryOverride.h"
 #include "RakAssert.h"
 #include <stdlib.h>
 

@@ -11,13 +11,13 @@
 // \file
 //
 
+#include "RakPeer.h"
 #include "RakNetPrivatePCH.h"
 
 
 #define CAT_NEUTER_EXPORT /* Neuter dllimport for libcat */
 
 #include "RakNetDefines.h"
-#include "RakPeer.h"
 #include "RakNetTypes.h"
 
 #ifdef _WIN32

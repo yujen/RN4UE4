@@ -8,13 +8,14 @@
  *
  */
 
+#include "RPC4Plugin.h"
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_RPC4Plugin==1
 
-#include "RPC4Plugin.h"
 #include "MessageIdentifiers.h"
 #include "RakPeerInterface.h"
 #include "PacketizedTCP.h"

@@ -8,13 +8,14 @@
  *
  */
 
+#include "TwoWayAuthentication.h"
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_TwoWayAuthentication==1
 
-#include "TwoWayAuthentication.h"
 #include "Rand.h"
 #include "GetTime.h"
 #include "MessageIdentifiers.h"

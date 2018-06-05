@@ -8,10 +8,11 @@
  *
  */
 
+#include "DS_ByteQueue.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "DS_ByteQueue.h"
 //#include <string.h> // Memmove
 //#include <stdlib.h> // realloc
 //#include <stdio.h>

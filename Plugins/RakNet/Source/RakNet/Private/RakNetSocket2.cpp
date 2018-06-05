@@ -8,10 +8,11 @@
  *
  */
 
+#include "RakNetSocket2.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "RakNetSocket2.h"
 #include "RakMemoryOverride.h"
 #include "RakAssert.h"
 #include "RakSleep.h"

@@ -8,13 +8,14 @@
  *
  */
 
+#include "TeamBalancer.h"
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_TeamBalancer==1
 
-#include "TeamBalancer.h"
 #include "BitStream.h"
 #include "MessageIdentifiers.h"
 #include "RakPeerInterface.h"

@@ -8,13 +8,14 @@
  *
  */
 
+#include "ReplicaManager3.h"
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_ReplicaManager3==1
 
-#include "ReplicaManager3.h"
 #include "GetTime.h"
 #include "MessageIdentifiers.h"
 #include "RakPeerInterface.h"

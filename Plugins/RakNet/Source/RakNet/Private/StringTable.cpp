@@ -8,10 +8,11 @@
  *
  */
 
+#include "StringTable.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "StringTable.h"
 //#include <string.h>
 #include "RakAssert.h"
 //#include <stdio.h>

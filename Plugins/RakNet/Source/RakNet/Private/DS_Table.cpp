@@ -8,10 +8,11 @@
  *
  */
 
+#include "DS_Table.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "DS_Table.h"
 #include "DS_OrderedList.h"
 //#include <string.h>
 #include "RakAssert.h"

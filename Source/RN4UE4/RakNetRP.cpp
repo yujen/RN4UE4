@@ -116,6 +116,9 @@ void ARakNetRP::RPConnect(const FString& host, const int port, const FString& ho
 	rakPeer->SetMaximumIncomingConnections(32);
 	rakPeer->Connect(TCHAR_TO_ANSI(*host), port, nullptr, 0);
 	rakPeer->Connect(TCHAR_TO_ANSI(*host2), port2, nullptr, 0);
+
+	rakPeer->AllowConnectionResponseIPMigration(false);
+	rakPeer->AttachPlugin(&rpc);
 }
 
 void ARakNetRP::RPDisconnect()
@@ -128,6 +131,14 @@ void ARakNetRP::RPDisconnect()
 
 	delete p;
 	p = nullptr;
+}
+
+void ARakNetRP::RPrpcTest(FVector pos, FVector dir)
+{
+	RakNet::BitStream testBs;
+	testBs.WriteVector<float>(pos.X, pos.Y, pos.Z);
+	testBs.WriteVector<float>(dir.X, dir.Y, dir.Z);
+	rpc.Signal("Spawn", &testBs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, rakPeer->GetSystemAddressFromIndex(0), false, false);
 }
 
 AReplica* ARakNetRP::GetObjectFromType(RakString typeName)

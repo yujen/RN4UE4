@@ -8,10 +8,10 @@
  *
  */
 
+#include "IncrementalReadInterface.h"
 #include "RakNetPrivatePCH.h"
 
 
-#include "IncrementalReadInterface.h"
 //#include <stdio.h>
 
 using namespace RakNet;

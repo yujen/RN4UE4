@@ -8,10 +8,10 @@
  *
  */
 
+#include "PluginInterface2.h"
 #include "RakNetPrivatePCH.h"
 
 
-#include "PluginInterface2.h"
 #include "PacketizedTCP.h"
 #include "RakPeerInterface.h"
 #include "BitStream.h"

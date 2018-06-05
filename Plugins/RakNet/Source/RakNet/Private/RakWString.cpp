@@ -8,10 +8,11 @@
  *
  */
 
+#include "RakWString.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "RakWString.h"
 #include "BitStream.h"
 //#include <string.h>
 //#include <wchar.h>

@@ -8,13 +8,13 @@
  *
  */
 
+#include "NatTypeDetectionServer.h"
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_NatTypeDetectionServer==1
 
-#include "NatTypeDetectionServer.h"
 #include "SocketLayer.h"
 #include "RakNetSmartPtr.h"
 #include "SocketIncludes.h"

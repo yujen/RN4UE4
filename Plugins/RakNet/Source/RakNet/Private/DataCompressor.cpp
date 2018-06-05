@@ -8,10 +8,10 @@
  *
  */
 
+#include "DataCompressor.h"
 #include "RakNetPrivatePCH.h"
 
 
-#include "DataCompressor.h"
 #include "DS_HuffmanEncodingTree.h"
 #include "RakAssert.h"
 //#include <string.h> // Use string.h rather than memory.h for a console

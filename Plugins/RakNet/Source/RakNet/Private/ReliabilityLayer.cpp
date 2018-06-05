@@ -11,10 +11,11 @@
 /// \file
 ///
 
+#include "ReliabilityLayer.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "ReliabilityLayer.h"
 #include "GetTime.h"
 #include "SocketLayer.h"
 #include "PluginInterface2.h"

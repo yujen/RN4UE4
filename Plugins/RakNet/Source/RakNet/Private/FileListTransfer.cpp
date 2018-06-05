@@ -8,6 +8,10 @@
  *
  */
 
+#if _RAKNET_SUPPORT_FileListTransfer==1 && _RAKNET_SUPPORT_FileOperations==1
+#include "FileListTransfer.h"
+#endif
+
 #include "RakNetPrivatePCH.h"
 
 

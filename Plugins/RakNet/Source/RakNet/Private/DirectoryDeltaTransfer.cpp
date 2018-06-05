@@ -8,6 +8,10 @@
  *
  */
 
+#if _RAKNET_SUPPORT_DirectoryDeltaTransfer==1 && _RAKNET_SUPPORT_FileOperations==1
+#include "DirectoryDeltaTransfer.h"
+#endif
+
 #include "RakNetPrivatePCH.h"
 
 

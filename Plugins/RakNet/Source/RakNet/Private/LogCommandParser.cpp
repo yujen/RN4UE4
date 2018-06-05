@@ -8,13 +8,15 @@
  *
  */
 
+#if _RAKNET_SUPPORT_LogCommandParser==1
+#include "LogCommandParser.h"
+#endif
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_LogCommandParser==1
-
-#include "LogCommandParser.h"
 #include "TransportInterface.h"
 
 //#include <memory.h>

@@ -8,10 +8,11 @@
  *
  */
 
+#include "RakString.h"
+
 #include "RakNetPrivatePCH.h"
 
 
-#include "RakString.h"
 #include "RakAssert.h"
 #include "RakMemoryOverride.h"
 #include "BitStream.h"

@@ -8,13 +8,13 @@
  *
  */
 
+#include "PacketLogger.h"
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_PacketLogger==1
 
-#include "PacketLogger.h"
 #include "BitStream.h"
 #include "DS_List.h"
 #include "InternalPacket.h"

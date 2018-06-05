@@ -8,13 +8,14 @@
  *
  */
 
+#include "CloudClient.h"
+
 #include "RakNetPrivatePCH.h"
 
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_CloudClient==1
 
-#include "CloudClient.h"
 #include "GetTime.h"
 #include "MessageIdentifiers.h"
 #include "BitStream.h"

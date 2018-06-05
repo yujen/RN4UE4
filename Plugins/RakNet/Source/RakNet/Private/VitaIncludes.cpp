@@ -1,3 +1,4 @@
+#include "VitaIncludes.h"
 
 #include "RakNetPrivatePCH.h"
 

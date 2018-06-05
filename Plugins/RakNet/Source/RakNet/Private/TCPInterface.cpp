@@ -8,6 +8,8 @@
  *
  */
 
+#include "TCPInterface.h"
+
 #include "RakNetPrivatePCH.h"
 
 
@@ -20,7 +22,6 @@
 
 
 
-#include "TCPInterface.h"
 #ifdef _WIN32
 	#if !defined (WINDOWS_STORE_RT)
 		typedef int socklen_t;

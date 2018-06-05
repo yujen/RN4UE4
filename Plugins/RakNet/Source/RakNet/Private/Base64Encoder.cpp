@@ -8,10 +8,10 @@
  *
  */
 
+#include "Base64Encoder.h"
 #include "RakNetPrivatePCH.h"
 
 
-#include "Base64Encoder.h"
 #include "RakMemoryOverride.h"
 
 const char *Base64Map(void) {return "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";}

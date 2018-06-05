@@ -8,6 +8,8 @@
  *
  */
 
+#include "Itoa.h"
+
 #include "RakNetPrivatePCH.h"
 
 
