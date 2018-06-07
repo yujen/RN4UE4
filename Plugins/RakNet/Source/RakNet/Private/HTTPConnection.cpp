@@ -11,9 +11,7 @@
 /// \file
 /// \brief Contains HTTPConnection, used to communicate with web servers
 ///
-#if _RAKNET_SUPPORT_HTTPConnection==1 && _RAKNET_SUPPORT_TCPInterface==1
 #include "HTTPConnection.h"
-#endif
 
 #include "RakNetPrivatePCH.h"
 
