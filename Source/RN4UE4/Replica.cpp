@@ -2,7 +2,6 @@
 
 #include "RN4UE4.h"
 #include "Replica.h"
-#include "Editor.h"
 
 DEFINE_LOG_CATEGORY(RakNet_Replica);
 
@@ -30,8 +29,8 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 {
 	constructionBitstream->Read(geom);
 	FActorSpawnParameters Parameters = FActorSpawnParameters();
-	Parameters.bDeferConstruction = true;
-	Parameters.bNoFail = true;
+	FTransform SpawnTransform = FTransform();
+	AStaticMeshActor* shape = nullptr;
 
 	switch (geom)
 	{
@@ -39,7 +38,7 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 	{
 		if (sphereBP == nullptr) break;
 
-		Parameters.Template = sphereBP;
+		shape = sphereBP->GetDefaultObject<AStaticMeshActor>();
 	}
 		break;
 	case PxGeometryType::ePLANE:
@@ -48,14 +47,14 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 	{
 		if (capsuleBP == nullptr) break;
 
-		Parameters.Template = capsuleBP;
+		shape = capsuleBP->GetDefaultObject<AStaticMeshActor>();
 	}
 		break;
 	case PxGeometryType::eBOX:
 	{
 		if (boxBP == nullptr) break;
 
-		Parameters.Template = boxBP;
+		shape = boxBP->GetDefaultObject<AStaticMeshActor>();
 	}
 		break;
 	case PxGeometryType::eCONVEXMESH:
@@ -72,14 +71,16 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 		break;
 	}
 
-	//visual = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), GetTransform(), Parameters);
-	//const FVector* Location = &GetTransform().GetLocation();
-	//const FRotator* Rotator = &GetTransform().GetRotation().Rotator();
-	visual = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), GetTransform(), Parameters);
-	//visual = GetWorld()->SpawnActor<AStaticMeshActor>(GetTransform().GetLocation(), GetTransform().GetRotation(), NULL, Instigator, true);
-	//GEditor->AddActor();
+	if (shape != nullptr)
+	{
+		Parameters.Template = shape;
+		visual = GetWorld()->SpawnActor(shape->GetClass(), &SpawnTransform, Parameters);
+	}
 
-	if (visual != nullptr) visual->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
+	if (visual != nullptr)
+	{
+		visual->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
+	}
 
 	constructionBitstream->Read(posX);
 	constructionBitstream->Read(posY);
@@ -143,6 +144,12 @@ void AReplica::UpdateTransform()
 void AReplica::SetMaterial(int32 elementIndex, UMaterialInterface* inMaterial)
 {
 	TArray<UStaticMeshComponent*> components;
+	if (visual == nullptr)
+	{
+		UE_LOG(RakNet_Replica, Error, TEXT("Replica::SetMaterial() visual is null, material not set"));
+		return;
+	}
+
 	visual->GetComponents<UStaticMeshComponent>(components);
 	for (int32 i = 0; i < components.Num(); i++)
 	{

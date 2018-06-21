@@ -138,14 +138,32 @@ void ARakNetRP::RPrpcTest(FVector pos, FVector dir)
 	RakNet::BitStream testBs;
 	testBs.WriteVector<float>(pos.X, pos.Y, pos.Z);
 	testBs.WriteVector<float>(dir.X, dir.Y, dir.Z);
-	rpc.Signal("Spawn", &testBs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, rakPeer->GetSystemAddressFromIndex(0), false, false);
+
+	DataStructures::List<RakNet::SystemAddress> addresses;
+	DataStructures::List<RakNet::RakNetGUID> guids;
+	rakPeer->GetSystemList(addresses, guids);
+
+	for (unsigned int i = 0; i < addresses.Size(); ++i)
+	{
+		rpc.Signal("Spawn", &testBs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, addresses[i], false, false);
+	}
 }
 
 AReplica* ARakNetRP::GetObjectFromType(RakString typeName)
 {
 	if (typeName == "ServerCreated_ServerSerialized") {
+
+		if (objectToSpawn == nullptr)
+		{
+			UE_LOG(RakNet_RakNetRP, Error, TEXT("ARakNetRP::GetObjectFromType() objectToSpawn is null, no replica object created"));
+			return nullptr;
+		}
+
 		// spawn the object 
-		return GetWorld()->SpawnActor<AReplica>(objectToSpawn, FVector::ZeroVector, FRotator::ZeroRotator, FActorSpawnParameters());
+		FActorSpawnParameters Parameters;
+		AReplica* replica = objectToSpawn->GetDefaultObject<AReplica>();
+		Parameters.Template = replica;
+		return (AReplica*)GetWorld()->SpawnActor(replica->GetClass(), new FTransform(), Parameters);
 	}
 
 	return nullptr;

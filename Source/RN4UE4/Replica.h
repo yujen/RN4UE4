@@ -171,13 +171,13 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SphereBP")
-		AStaticMeshActor* sphereBP;
+		TSubclassOf<AStaticMeshActor> sphereBP;
 
 	UPROPERTY(EditDefaultsOnly, Category = "BoxBP")
-		AStaticMeshActor* boxBP;
+		TSubclassOf<AStaticMeshActor> boxBP;
 
 	UPROPERTY(EditDefaultsOnly, Category = "CapsuleBP")
-		AStaticMeshActor* capsuleBP;
+		TSubclassOf<AStaticMeshActor> capsuleBP;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Server0Material")
 		UMaterial* server0Material;
