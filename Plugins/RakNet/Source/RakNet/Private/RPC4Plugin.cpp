@@ -159,9 +159,9 @@ bool RPC4::RegisterFunction(const char* uniqueID, void ( *functionPointer ) ( Ra
 	registeredNonblockingFunctions.Push(uniqueID,functionPointer,_FILE_AND_LINE_);
 	return true;
 }
-void RPC4::RegisterSlot(const char *sharedIdentifier, void ( *functionPointer ) ( RakNet::BitStream *userData, Packet *packet ), int callPriority)
+void RPC4::RegisterSlot(const char *sharedIdentifier, std::function<void(RakNet::BitStream *userData, Packet *packet)> fun, int callPriority)
 {
-	LocalSlotObject lso(nextSlotRegistrationCount++, callPriority, functionPointer);
+	LocalSlotObject lso(nextSlotRegistrationCount++, callPriority, fun);
 	DataStructures::HashIndex idx = GetLocalSlotIndex(sharedIdentifier);
 	LocalSlot *localSlot;
 	if (idx.IsInvalid())
@@ -175,13 +175,13 @@ void RPC4::RegisterSlot(const char *sharedIdentifier, void ( *functionPointer ) 
 	}
 	localSlot->slotObjects.Insert(lso,lso,true,_FILE_AND_LINE_);
 }
-bool RPC4::RegisterBlockingFunction(const char* uniqueID, void ( *functionPointer ) ( RakNet::BitStream *userData, RakNet::BitStream *returnData, Packet *packet ))
+bool RPC4::RegisterBlockingFunction(const char* uniqueID, std::function<void(RakNet::BitStream *userData, RakNet::BitStream *returnData, Packet *packet)> fun)
 {
 	DataStructures::HashIndex skhi = registeredBlockingFunctions.GetIndexOf(uniqueID);
 	if (skhi.IsInvalid()==false)
 		return false;
 
-	registeredBlockingFunctions.Push(uniqueID,functionPointer,_FILE_AND_LINE_);
+	registeredBlockingFunctions.Push(uniqueID,fun,_FILE_AND_LINE_);
 	return true;
 }
 void RPC4::RegisterLocalCallback(const char* uniqueID, MessageID messageId)
@@ -214,8 +214,8 @@ bool RPC4::UnregisterFunction(const char* uniqueID)
 }
 bool RPC4::UnregisterBlockingFunction(const char* uniqueID)
 {
-	void ( *f ) ( RakNet::BitStream *, RakNet::BitStream *,Packet * );
-	return registeredBlockingFunctions.Pop(f,uniqueID,_FILE_AND_LINE_);
+	std::function<void(RakNet::BitStream *userData, RakNet::BitStream *returnData, Packet *packet)> fun;
+	return registeredBlockingFunctions.Pop(fun,uniqueID,_FILE_AND_LINE_);
 }
 bool RPC4::UnregisterLocalCallback(const char* uniqueID, MessageID messageId)
 {
@@ -564,7 +564,7 @@ PluginReceiveResult RPC4::OnReceive(Packet *packet)
 					return RR_STOP_PROCESSING_AND_DEALLOCATE;
 				}
 
-				void ( *fp ) ( RakNet::BitStream *, RakNet::BitStream *, Packet * );
+				std::function<void(RakNet::BitStream *userData, RakNet::BitStream *returnData, Packet *packet)> fp;
 				fp = registeredBlockingFunctions.ItemAtIndex(skhi);
 				RakNet::BitStream returnData;
 				bsIn.AlignReadToByteBoundary();

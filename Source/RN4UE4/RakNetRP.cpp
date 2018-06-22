@@ -2,6 +2,8 @@
 
 #include "RN4UE4.h"
 #include "RakNetRP.h"
+#include <functional>
+using namespace std::placeholders;
 
 DEFINE_LOG_CATEGORY(RakNet_RakNetRP);
 
@@ -34,6 +36,9 @@ ARakNetRP::ARakNetRP() : ReplicaManager3()
 void ARakNetRP::BeginPlay()
 {
 	Super::BeginPlay();
+
+	auto fp = std::bind(&ARakNetRP::CreateBoundarySlot, this, _1, _2);
+	rpc.RegisterSlot("CreateBoundary", fp, 0);
 }
 
 // Called every frame
@@ -133,7 +138,7 @@ void ARakNetRP::RPDisconnect()
 	p = nullptr;
 }
 
-void ARakNetRP::RPrpcTest(FVector pos, FVector dir)
+void ARakNetRP::RPrpcSpawn(FVector pos, FVector dir)
 {
 	RakNet::BitStream testBs;
 	testBs.WriteVector<float>(pos.X, pos.Y, pos.Z);
@@ -167,6 +172,20 @@ AReplica* ARakNetRP::GetObjectFromType(RakString typeName)
 	}
 
 	return nullptr;
+}
+
+void ARakNetRP::CreateBoundarySlot(RakNet::BitStream * bitStream, Packet * packet)
+{
+	FVector pos;
+	bitStream->ReadVector<float>(pos.X, pos.Y, pos.Z);
+
+	FVector size;
+	bitStream->ReadVector<float>(size.X, size.Y, size.Z);
+	CreateBoundaryEvent(pos, size);
+}
+
+void ARakNetRP::CreateBoundaryEvent_Implementation(FVector pos, FVector size)
+{
 }
 
 Connection_RM3* ARakNetRP::AllocConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID) const {

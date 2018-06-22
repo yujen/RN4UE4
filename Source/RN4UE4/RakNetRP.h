@@ -61,12 +61,17 @@ public:
 		void RPDisconnect();
 
 	UFUNCTION(BlueprintCallable, Category = "RakNet|RakNetRP")
-		void RPrpcTest(FVector pos, FVector dir);
+		void RPrpcSpawn(FVector pos, FVector dir);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Object to spawn")
 		TSubclassOf<AReplica> objectToSpawn;
 
 	AReplica* GetObjectFromType(RakString typeName);
+
+	void CreateBoundarySlot(RakNet::BitStream * bitStream, Packet * packet);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "RakNet|RakNetRP")
+		void CreateBoundaryEvent(FVector pos, FVector size);
 
 	virtual Connection_RM3* AllocConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID) const;
 	virtual void DeallocConnection(Connection_RM3 *connection) const;
