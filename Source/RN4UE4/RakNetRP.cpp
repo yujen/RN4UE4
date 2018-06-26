@@ -176,15 +176,18 @@ AReplica* ARakNetRP::GetObjectFromType(RakString typeName)
 
 void ARakNetRP::CreateBoundarySlot(RakNet::BitStream * bitStream, Packet * packet)
 {
+	int rank;
+	bitStream->Read<int>(rank);
+
 	FVector pos;
 	bitStream->ReadVector<float>(pos.X, pos.Y, pos.Z);
 
 	FVector size;
 	bitStream->ReadVector<float>(size.X, size.Y, size.Z);
-	CreateBoundaryEvent(pos, size);
+	CreateBoundaryEvent(rank, pos, size);
 }
 
-void ARakNetRP::CreateBoundaryEvent_Implementation(FVector pos, FVector size)
+void ARakNetRP::CreateBoundaryEvent_Implementation(int rank, FVector pos, FVector size)
 {
 }
 

@@ -71,7 +71,7 @@ public:
 	void CreateBoundarySlot(RakNet::BitStream * bitStream, Packet * packet);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "RakNet|RakNetRP")
-		void CreateBoundaryEvent(FVector pos, FVector size);
+		void CreateBoundaryEvent(int rank, FVector pos, FVector size);
 
 	virtual Connection_RM3* AllocConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID) const;
 	virtual void DeallocConnection(Connection_RM3 *connection) const;
