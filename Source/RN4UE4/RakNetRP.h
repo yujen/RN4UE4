@@ -55,10 +55,13 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 	UFUNCTION(BlueprintCallable, Category = "RakNet|RakNetRP")
-		void RPConnect(const FString& host, const int port, const FString& host2, const int port2);
+		void RPStartup();
 
 	UFUNCTION(BlueprintCallable, Category = "RakNet|RakNetRP")
 		void RPDisconnect();
+
+	UFUNCTION(BlueprintCallable, Category = "RakNet|RakNetRP")
+		void RPConnect(const FString& host, const int port);
 
 	UFUNCTION(BlueprintCallable, Category = "RakNet|RakNetRP")
 		void RPrpcSpawn(FVector pos, FVector dir);
@@ -71,7 +74,10 @@ public:
 	void CreateBoundarySlot(RakNet::BitStream * bitStream, Packet * packet);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "RakNet|RakNetRP")
-		void CreateBoundaryEvent(int rank, FVector pos, FVector size);
+		void CreateBoundaryBox(int rank, FVector pos, FVector size);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "RakNet|RakNetRP")
+		void CreateBoundaryPlane(int rank, FVector pos, FVector normal);
 
 	virtual Connection_RM3* AllocConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID) const;
 	virtual void DeallocConnection(Connection_RM3 *connection) const;

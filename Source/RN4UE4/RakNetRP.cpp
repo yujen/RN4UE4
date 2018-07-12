@@ -107,20 +107,18 @@ void ARakNetRP::Tick(float DeltaTime)
 	}
 }
 
-void ARakNetRP::RPConnect(const FString& host, const int port, const FString& host2, const int port2)
+void ARakNetRP::RPStartup()
 {
-	UE_LOG(RakNet_RakNetRP, Log, TEXT("ARakNetRP::RPConnect"));
+	UE_LOG(RakNet_RakNetRP, Log, TEXT("ARakNetRP::RPStartup"));
 
 	rakPeer = RakPeerInterface::GetInstance();
 	SocketDescriptor socketDescriptor(0, 0);
-	rakPeer->Startup(2, &socketDescriptor, 1);
+	rakPeer->Startup(32, &socketDescriptor, 1);
 
 	// Start RakNet, up to 32 connections if the server
 	rakPeer->AttachPlugin(this);
 	SetNetworkIDManager(&networkIdManager);
 	rakPeer->SetMaximumIncomingConnections(32);
-	rakPeer->Connect(TCHAR_TO_ANSI(*host), port, nullptr, 0);
-	rakPeer->Connect(TCHAR_TO_ANSI(*host2), port2, nullptr, 0);
 
 	rakPeer->AllowConnectionResponseIPMigration(false);
 	rakPeer->AttachPlugin(&rpc);
@@ -136,6 +134,11 @@ void ARakNetRP::RPDisconnect()
 
 	delete p;
 	p = nullptr;
+}
+
+void ARakNetRP::RPConnect(const FString& host, const int port)
+{
+	rakPeer->Connect(TCHAR_TO_ANSI(*host), port, nullptr, 0);
 }
 
 void ARakNetRP::RPrpcSpawn(FVector pos, FVector dir)
@@ -179,15 +182,38 @@ void ARakNetRP::CreateBoundarySlot(RakNet::BitStream * bitStream, Packet * packe
 	int rank;
 	bitStream->Read<int>(rank);
 
+	int geomType;
+	bitStream->Read<int>(geomType);
+
 	FVector pos;
 	bitStream->ReadVector<float>(pos.X, pos.Y, pos.Z);
 
-	FVector size;
-	bitStream->ReadVector<float>(size.X, size.Y, size.Z);
-	CreateBoundaryEvent(rank, pos, size);
+	switch (geomType)
+	{
+	case 1:
+	{
+		FVector normal;
+		bitStream->ReadVector<float>(normal.X, normal.Y, normal.Z);
+		CreateBoundaryPlane(rank, pos, normal);
+	}
+	break;
+	case 3:
+	{
+		FVector size;
+		bitStream->ReadVector<float>(size.X, size.Y, size.Z);
+		CreateBoundaryBox(rank, pos, size);
+	}
+	break;
+	default:
+		break;
+	}
 }
 
-void ARakNetRP::CreateBoundaryEvent_Implementation(int rank, FVector pos, FVector size)
+void ARakNetRP::CreateBoundaryBox_Implementation(int rank, FVector pos, FVector size)
+{
+}
+
+void ARakNetRP::CreateBoundaryPlane_Implementation(int rank, FVector pos, FVector normal)
 {
 }
 
