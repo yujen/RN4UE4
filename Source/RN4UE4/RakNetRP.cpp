@@ -2,6 +2,8 @@
 
 #include "RN4UE4.h"
 #include "RakNetRP.h"
+#include <functional>
+using namespace std::placeholders;
 
 DEFINE_LOG_CATEGORY(RakNet_RakNetRP);
 
@@ -34,6 +36,9 @@ ARakNetRP::ARakNetRP() : ReplicaManager3()
 void ARakNetRP::BeginPlay()
 {
 	Super::BeginPlay();
+
+	auto fp = std::bind(&ARakNetRP::CreateBoundarySlot, this, _1, _2);
+	rpc.RegisterSlot("CreateBoundary", fp, 0);
 }
 
 // Called every frame
@@ -102,20 +107,18 @@ void ARakNetRP::Tick(float DeltaTime)
 	}
 }
 
-void ARakNetRP::RPConnect(const FString& host, const int port, const FString& host2, const int port2)
+void ARakNetRP::RPStartup()
 {
-	UE_LOG(RakNet_RakNetRP, Log, TEXT("ARakNetRP::RPConnect"));
+	UE_LOG(RakNet_RakNetRP, Log, TEXT("ARakNetRP::RPStartup"));
 
 	rakPeer = RakPeerInterface::GetInstance();
 	SocketDescriptor socketDescriptor(0, 0);
-	rakPeer->Startup(2, &socketDescriptor, 1);
+	rakPeer->Startup(32, &socketDescriptor, 1);
 
 	// Start RakNet, up to 32 connections if the server
 	rakPeer->AttachPlugin(this);
 	SetNetworkIDManager(&networkIdManager);
 	rakPeer->SetMaximumIncomingConnections(32);
-	rakPeer->Connect(TCHAR_TO_ANSI(*host), port, nullptr, 0);
-	rakPeer->Connect(TCHAR_TO_ANSI(*host2), port2, nullptr, 0);
 
 	rakPeer->AllowConnectionResponseIPMigration(false);
 	rakPeer->AttachPlugin(&rpc);
@@ -133,7 +136,12 @@ void ARakNetRP::RPDisconnect()
 	p = nullptr;
 }
 
-void ARakNetRP::RPrpcTest(FVector pos, FVector dir)
+void ARakNetRP::RPConnect(const FString& host, const int port)
+{
+	rakPeer->Connect(TCHAR_TO_ANSI(*host), port, nullptr, 0);
+}
+
+void ARakNetRP::RPrpcSpawn(FVector pos, FVector dir)
 {
 	RakNet::BitStream testBs;
 	testBs.WriteVector<float>(pos.X, pos.Y, pos.Z);
@@ -167,6 +175,46 @@ AReplica* ARakNetRP::GetObjectFromType(RakString typeName)
 	}
 
 	return nullptr;
+}
+
+void ARakNetRP::CreateBoundarySlot(RakNet::BitStream * bitStream, Packet * packet)
+{
+	int rank;
+	bitStream->Read<int>(rank);
+
+	int geomType;
+	bitStream->Read<int>(geomType);
+
+	FVector pos;
+	bitStream->ReadVector<float>(pos.X, pos.Y, pos.Z);
+
+	switch (geomType)
+	{
+	case 1:
+	{
+		FVector normal;
+		bitStream->ReadVector<float>(normal.X, normal.Y, normal.Z);
+		CreateBoundaryPlane(rank, pos, normal);
+	}
+	break;
+	case 3:
+	{
+		FVector size;
+		bitStream->ReadVector<float>(size.X, size.Y, size.Z);
+		CreateBoundaryBox(rank, pos, size);
+	}
+	break;
+	default:
+		break;
+	}
+}
+
+void ARakNetRP::CreateBoundaryBox_Implementation(int rank, FVector pos, FVector size)
+{
+}
+
+void ARakNetRP::CreateBoundaryPlane_Implementation(int rank, FVector pos, FVector normal)
+{
 }
 
 Connection_RM3* ARakNetRP::AllocConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID) const {

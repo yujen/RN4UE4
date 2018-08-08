@@ -27,6 +27,7 @@
 #include "NetworkIDObject.h"
 #include "DS_Hash.h"
 #include "DS_OrderedList.h"
+#include <functional>
 
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -102,10 +103,10 @@ class NetworkIDManager;
 		/// \param[in] sharedIdentifier A string to identify the slot. Recommended to be the same as the name of the function.
 		/// \param[in] functionPtr Pointer to the function. For C, just pass the name of the function. For C++, use ARPC_REGISTER_CPP_FUNCTION
 		/// \param[in] callPriority Slots are called by order of the highest callPriority first. For slots with the same priority, they are called in the order they are registered
-		void RegisterSlot(const char *sharedIdentifier, void ( *functionPointer ) ( RakNet::BitStream *userData, Packet *packet ), int callPriority);
+		void RegisterSlot(const char *sharedIdentifier, std::function<void(RakNet::BitStream *userData, Packet *packet)> fun, int callPriority);
 
 		/// \brief Same as \a RegisterFunction, but is called with CallBlocking() instead of Call() and returns a value to the caller
-		bool RegisterBlockingFunction(const char* uniqueID, void ( *functionPointer ) ( RakNet::BitStream *userData, RakNet::BitStream *returnData, Packet *packet ));
+		bool RegisterBlockingFunction(const char* uniqueID, std::function<void(RakNet::BitStream *userData, RakNet::BitStream *returnData, Packet *packet)> fun);
 
 		/// \deprecated Use RegisterSlot and invoke on self only when the packet you want arrives
 		/// When a RakNet Packet with the specified identifier is returned, execute CallLoopback() on a function previously registered with RegisterFunction()
@@ -189,14 +190,15 @@ class NetworkIDManager;
 		struct LocalSlotObject
 		{
 			LocalSlotObject() {}
-			LocalSlotObject(unsigned int _registrationCount,int _callPriority, void ( *_functionPointer ) ( RakNet::BitStream *userData, Packet *packet ))
-			{registrationCount=_registrationCount;callPriority=_callPriority;functionPointer=_functionPointer;}
+			LocalSlotObject(unsigned int _registrationCount,int _callPriority, std::function<void(RakNet::BitStream *userData, Packet *packet)> fun)
+			{registrationCount=_registrationCount;callPriority=_callPriority;functionPointer=fun;}
 			~LocalSlotObject() {}
 
 			// Used so slots are called in the order they are registered
 			unsigned int registrationCount;
 			int callPriority;
-			void ( *functionPointer ) ( RakNet::BitStream *userData, Packet *packet );
+			std::function<void(RakNet::BitStream *userData, Packet *packet)> functionPointer;
+			//void ( *functionPointer ) ( RakNet::BitStream *userData, Packet *packet );
 		};
 
 		static int LocalSlotObjectComp( const LocalSlotObject &key, const LocalSlotObject &data );
@@ -217,7 +219,7 @@ class NetworkIDManager;
 		virtual PluginReceiveResult OnReceive(Packet *packet);
 
 		DataStructures::Hash<RakNet::RakString, void ( * ) ( RakNet::BitStream *, Packet * ),64, RakNet::RakString::ToInteger> registeredNonblockingFunctions;
-		DataStructures::Hash<RakNet::RakString, void ( * ) ( RakNet::BitStream *, RakNet::BitStream *, Packet * ),64, RakNet::RakString::ToInteger> registeredBlockingFunctions;
+		DataStructures::Hash<RakNet::RakString, std::function<void(RakNet::BitStream *userData, RakNet::BitStream *returnData, Packet *packet)>,64, RakNet::RakString::ToInteger> registeredBlockingFunctions;
 		DataStructures::OrderedList<MessageID,LocalCallback*,RPC4::LocalCallbackComp> localCallbacks;
 
 		RakNet::BitStream blockingReturnValue;
