@@ -122,6 +122,63 @@ void ARakNetRP::RPStartup()
 
 	rakPeer->AllowConnectionResponseIPMigration(false);
 	rakPeer->AttachPlugin(&rpc);
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FCommandLine::Get());
+	}
+
+	FString address;
+	int ipCounter = 1;
+	FString command = "IP";
+	command.AppendInt(ipCounter);
+
+	//if (GEngine)
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, TEXT("IP" + ipCounter));
+	//}
+
+	/*if (FParse::Param(FCommandLine::Get(), TEXT("IP1")))
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, "Found IP1");
+		}
+	}*/
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Red, TEXT("IP" + ipCounter));
+	}
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Red, *command);
+	}
+
+	while (FParse::Value(FCommandLine::Get(), TEXT("IP" + ipCounter), address))
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, "Found IP: " + address);
+		}
+
+		FString host;
+		FString port;
+		address.Split(":", &host, &port);
+		int portNumber = FCString::Atoi(*port);
+
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, FString("ARakNetRP::RPStartup() Connecting to " + host + ":" + port));
+		}
+
+		RPConnect(host, portNumber);
+
+		ipCounter++;
+		//command = "IP";
+		//command.AppendInt(ipCounter);
+	}
 }
 
 void ARakNetRP::RPDisconnect()
