@@ -115,6 +115,8 @@ void ARakNetRP::RPStartup()
 	SocketDescriptor socketDescriptor(0, 0);
 	rakPeer->Startup(32, &socketDescriptor, 1);
 
+	UE_LOG(RakNet_RakNetRP, Log, TEXT("ARakNetRP::RPStartup - passed startup"));
+
 	// Start RakNet, up to 32 connections if the server
 	rakPeer->AttachPlugin(this);
 	SetNetworkIDManager(&networkIdManager);
@@ -123,10 +125,14 @@ void ARakNetRP::RPStartup()
 	rakPeer->AllowConnectionResponseIPMigration(false);
 	rakPeer->AttachPlugin(&rpc);
 
+	UE_LOG(RakNet_RakNetRP, Log, TEXT("ARakNetRP::RPStartup - plugin attached"));
+
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FCommandLine::Get());
 	}
+
+	UE_LOG(RakNet_RakNetRP, Log, TEXT("ARakNetRP::RPStartup - command line got"));
 
 	FString address;
 	int ipCounter = 1;
@@ -137,14 +143,26 @@ void ARakNetRP::RPStartup()
 	//{
 	//	GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, TEXT("IP" + ipCounter));
 	//}
-
-	/*if (FParse::Param(FCommandLine::Get(), TEXT("IP1")))
+	if (GEngine)
 	{
-		if (GEngine)
+		if (FParse::Param(FCommandLine::Get(), TEXT("IP1")))
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, "Found IP1");
 		}
-	}*/
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, "IP1 Not Found");
+		}
+
+		if (FParse::Param(FCommandLine::Get(), TEXT("IP2")))
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, "Found IP2");
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, "IP2 Not Found");
+		}
+	}
 
 	if (GEngine)
 	{
@@ -156,7 +174,7 @@ void ARakNetRP::RPStartup()
 		GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Red, *command);
 	}
 
-	while (FParse::Value(FCommandLine::Get(), TEXT("IP" + ipCounter), address))
+	while (FParse::Value(FCommandLine::Get(), *command, address))
 	{
 		if (GEngine)
 		{
@@ -176,8 +194,13 @@ void ARakNetRP::RPStartup()
 		RPConnect(host, portNumber);
 
 		ipCounter++;
-		//command = "IP";
-		//command.AppendInt(ipCounter);
+		command = "IP";
+		command.AppendInt(ipCounter);
+
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, FString("Now attempting to read: " + command));
+		}
 	}
 }
 
