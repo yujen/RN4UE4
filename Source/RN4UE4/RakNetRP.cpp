@@ -174,6 +174,14 @@ void ARakNetRP::RPStartup()
 		GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Red, *command);
 	}
 
+	if (!FParse::Param(FCommandLine::Get(), TEXT("IP1")))
+	{
+		ConnectToIP("127.0.0.1:12345");
+		ConnectToIP("127.0.0.1:12346");
+		ConnectToIP("127.0.0.1:12347");
+		ConnectToIP("127.0.0.1:12348");
+	}
+
 	while (FParse::Value(FCommandLine::Get(), *command, address))
 	{
 		if (GEngine)
