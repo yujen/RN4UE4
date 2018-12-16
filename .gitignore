@@ -1,7 +1,7 @@
 .vs/
-Binaries/
+#Binaries/
 Build/
-Config/
+#Config/
 Content/Developers
 Intermediate/
 Plugins/RakNet/Binaries/
@@ -9,6 +9,11 @@ Plugins/RakNet/Intermediate/
 Saved/
 Content/StarterContent/
 
+*.exe
+*.exp
+*.lib
+*.pdb
+*.dll
 RN4UE4.sln
 RN4UE4.VC.db
 RN4UE4.xcworkspace
