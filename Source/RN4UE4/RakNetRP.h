@@ -84,6 +84,8 @@ public:
 
 private:
 
+	void ConnectToIP(const FString& address);
+
 	RakPeerInterface*		rakPeer				= nullptr;
 	NetworkIDManager		networkIdManager;	// ReplicaManager3 requires NetworkIDManager to lookup pointers from numbers.
 	Packet*					p					= nullptr;// Holds packets

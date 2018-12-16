@@ -181,17 +181,7 @@ void ARakNetRP::RPStartup()
 			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, "Found IP: " + address);
 		}
 
-		FString host;
-		FString port;
-		address.Split(":", &host, &port);
-		int portNumber = FCString::Atoi(*port);
-
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, FString("ARakNetRP::RPStartup() Connecting to " + host + ":" + port));
-		}
-
-		RPConnect(host, portNumber);
+		ConnectToIP(address);
 
 		ipCounter++;
 		command = "IP";
@@ -303,4 +293,19 @@ Connection_RM3* ARakNetRP::AllocConnection(const SystemAddress &systemAddress, R
 
 void ARakNetRP::DeallocConnection(Connection_RM3 *connection) const {
 	delete connection;
+}
+
+void ARakNetRP::ConnectToIP(const FString& address)
+{
+	FString host;
+	FString port;
+	address.Split(":", &host, &port);
+	int portNumber = FCString::Atoi(*port);
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, FString("ARakNetRP::ConnectToIP() Connecting to " + host + ":" + port));
+	}
+
+	RPConnect(host, portNumber);
 }
