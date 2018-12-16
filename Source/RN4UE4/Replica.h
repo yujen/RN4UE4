@@ -185,6 +185,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Server1Material")
 		UMaterial* server1Material;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Server2Material")
+		UMaterial* server2Material;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Server3Material")
+		UMaterial* server3Material;
+
 	UPROPERTY(EditDefaultsOnly, Category = "UnknownMaterial")
 		UMaterial* unknownMaterial;
 

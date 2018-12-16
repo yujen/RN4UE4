@@ -91,7 +91,29 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 	constructionBitstream->Read(rotW);
 	UpdateTransform();
 
-	if (replicaManager->GetConnectionAtIndex(0) == sourceConnection)
+	unsigned short port = sourceConnection->GetSystemAddress().GetPort();
+	int rank = port - 12345;
+
+	switch (rank)
+	{
+	case 0:
+		SetMaterial(0, server0Material);
+		break;
+	case 1:
+		SetMaterial(0, server1Material);
+		break;
+	case 2:
+		SetMaterial(0, server2Material);
+		break;
+	case 3:
+		SetMaterial(0, server3Material);
+		break;
+	default:
+		SetMaterial(0, unknownMaterial);
+		break;
+	}
+
+	/*if (replicaManager->GetConnectionAtIndex(0) == sourceConnection)
 	{
 		SetMaterial(0, server0Material);
 	}
@@ -99,10 +121,18 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 	{
 		SetMaterial(0, server1Material);
 	}
+	else if (replicaManager->GetConnectionCount() > 2 && replicaManager->GetConnectionAtIndex(2) == sourceConnection)
+	{
+		SetMaterial(0, server2Material);
+	}
+	else if (replicaManager->GetConnectionCount() > 3 && replicaManager->GetConnectionAtIndex(3) == sourceConnection)
+	{
+		SetMaterial(0, server3Material);
+	}
 	else
 	{
 		SetMaterial(0, unknownMaterial);
-	}
+	}*/
 
 	return SampleReplica::DeserializeConstruction(constructionBitstream, sourceConnection);
 }
