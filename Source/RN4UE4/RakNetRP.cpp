@@ -3,6 +3,7 @@
 #include "RN4UE4.h"
 #include "RakNetRP.h"
 #include <functional>
+#include <string>
 using namespace std::placeholders;
 
 DEFINE_LOG_CATEGORY(RakNet_RakNetRP);
@@ -127,7 +128,7 @@ void ARakNetRP::RPStartup()
 
 	UE_LOG(RakNet_RakNetRP, Log, TEXT("ARakNetRP::RPStartup - plugin attached"));
 
-	if (GEngine)
+	/*if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FCommandLine::Get());
 	}
@@ -199,7 +200,7 @@ void ARakNetRP::RPStartup()
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, FString("Now attempting to read: " + command));
 		}
-	}
+	}*/
 }
 
 void ARakNetRP::RPDisconnect()
@@ -216,6 +217,11 @@ void ARakNetRP::RPDisconnect()
 
 void ARakNetRP::RPConnect(const FString& host, const int port)
 {
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString("Connecting to " + host));
+	}
+
 	rakPeer->Connect(TCHAR_TO_ANSI(*host), port, nullptr, 0);
 }
 
