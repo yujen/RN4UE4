@@ -101,7 +101,7 @@ void ARakNetRP::Tick(float DeltaTime)
 		}
 	}
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 11; i++)
 	{
 		if (rakPeer->GetInternalID(UNASSIGNED_SYSTEM_ADDRESS, 0).GetPort() != SERVER_PORT + i)
 			rakPeer->AdvertiseSystem("255.255.255.255", SERVER_PORT + i, 0, 0, 0);
@@ -127,80 +127,6 @@ void ARakNetRP::RPStartup()
 	rakPeer->AttachPlugin(&rpc);
 
 	UE_LOG(RakNet_RakNetRP, Log, TEXT("ARakNetRP::RPStartup - plugin attached"));
-
-	/*if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FCommandLine::Get());
-	}
-
-	UE_LOG(RakNet_RakNetRP, Log, TEXT("ARakNetRP::RPStartup - command line got"));
-
-	FString address;
-	int ipCounter = 1;
-	FString command = "IP";
-	command.AppendInt(ipCounter);
-
-	//if (GEngine)
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, TEXT("IP" + ipCounter));
-	//}
-	if (GEngine)
-	{
-		if (FParse::Param(FCommandLine::Get(), TEXT("IP1")))
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, "Found IP1");
-		}
-		else
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, "IP1 Not Found");
-		}
-
-		if (FParse::Param(FCommandLine::Get(), TEXT("IP2")))
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, "Found IP2");
-		}
-		else
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, "IP2 Not Found");
-		}
-	}
-
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Red, TEXT("IP" + ipCounter));
-	}
-
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Red, *command);
-	}
-
-	if (!FParse::Param(FCommandLine::Get(), TEXT("IP1")))
-	{
-		ConnectToIP("127.0.0.1:12345");
-		ConnectToIP("127.0.0.1:12346");
-		ConnectToIP("127.0.0.1:12347");
-		ConnectToIP("127.0.0.1:12348");
-	}
-
-	while (FParse::Value(FCommandLine::Get(), *command, address))
-	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, "Found IP: " + address);
-		}
-
-		ConnectToIP(address);
-
-		ipCounter++;
-		command = "IP";
-		command.AppendInt(ipCounter);
-
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 120.0f, FColor::Yellow, FString("Now attempting to read: " + command));
-		}
-	}*/
 }
 
 void ARakNetRP::RPDisconnect()
