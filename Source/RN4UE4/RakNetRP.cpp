@@ -143,11 +143,6 @@ void ARakNetRP::RPDisconnect()
 
 void ARakNetRP::RPConnect(const FString& host, const int port)
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString("Connecting to " + host));
-	}
-
 	rakPeer->Connect(TCHAR_TO_ANSI(*host), port, nullptr, 0);
 }
 
