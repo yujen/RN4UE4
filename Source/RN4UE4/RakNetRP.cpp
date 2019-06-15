@@ -40,6 +40,8 @@ void ARakNetRP::BeginPlay()
 
 	auto fp = std::bind(&ARakNetRP::CreateBoundarySlot, this, _1, _2);
 	rpc.RegisterSlot("CreateBoundary", fp, 0);
+	auto deleteFunction = std::bind(&ARakNetRP::DeleteBoundarySlot, this, _1, _2);
+	rpc.RegisterSlot("DeleteBoundary", deleteFunction, 0);
 }
 
 // Called every frame
@@ -212,6 +214,17 @@ void ARakNetRP::CreateBoundarySlot(RakNet::BitStream * bitStream, Packet * packe
 	default:
 		break;
 	}
+}
+
+void ARakNetRP::DeleteBoundarySlot(RakNet::BitStream * bitStream, Packet * packet)
+{
+	int rank;
+	bitStream->Read<int>(rank);
+	DeleteBoundaryBox(rank);
+}
+
+void ARakNetRP::DeleteBoundaryBox_Implementation(int rank)
+{
 }
 
 void ARakNetRP::CreateBoundaryBox_Implementation(int rank, FVector pos, FVector size)
