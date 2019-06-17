@@ -194,6 +194,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "UnknownMaterial")
 		UMaterial* unknownMaterial;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Rank")
+		int rank;
+
 	virtual RakString GetName(void) const { return RakString("ServerCreated_ServerSerialized"); }
 	virtual RM3SerializationResult Serialize(SerializeParameters *serializeParameters)
 	{
@@ -224,4 +227,5 @@ public:
 
 private:
 	AActor* visual = nullptr;
+	
 };

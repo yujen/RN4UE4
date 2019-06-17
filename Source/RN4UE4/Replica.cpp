@@ -93,7 +93,7 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 
 	unsigned short port = sourceConnection->GetSystemAddress().GetPort();
 	int rank = port - 12345;
-
+	this->rank = rank;
 	switch (rank)
 	{
 	case 0:
