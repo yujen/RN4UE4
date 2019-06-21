@@ -40,7 +40,10 @@ public:
 		UStaticMeshComponent* MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Body"));
 	UPROPERTY(EditAnywhere, Category = "Mesh")
 		UArrowComponent * ArrowComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("Direction"));
+	UPROPERTY(EditAnywhere, Category = "Base")
+		float			spawnTime;
 protected:
+	float			currentTime;
 	bool			active;
 	bool			sent;
 };

@@ -9,7 +9,7 @@ ABaseReplica::ABaseReplica()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	spawnTime = 5.0f;
 }
 
 // Called when the game starts or when spawned
@@ -17,6 +17,7 @@ void ABaseReplica::BeginPlay()
 {
 	Super::BeginPlay();
 	sent = false;
+	active = true;
 }
 
 // Called every frame
@@ -25,11 +26,30 @@ void ABaseReplica::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (rakNetManager != nullptr)
 	{
-		if (active && !sent && rakNetManager->getAllServersChecked())
+		if(currentTime <= spawnTime)
+			currentTime += DeltaTime;
+		if (active && !sent && rakNetManager->getAllServersChecked() && currentTime > spawnTime)
 		{
 			sendMeshServer();
 			sent = true;
-			MeshComponent->DestroyComponent();
+			if (MeshComponent != nullptr)
+			{
+				MeshComponent->DestroyComponent();
+			}
+		}
+	}
+	else
+	{
+		for (TActorIterator<ARakNetRP> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+		{
+			// Same as with the Object Iterator, access the subclass instance with the * or -> operators.
+			if (*ActorItr != nullptr)
+			{
+				ARakNetRP *rak = *ActorItr;
+				rakNetManager = rak;
+				break;
+			}
+
 		}
 	}
 }
@@ -64,12 +84,15 @@ void ABaseReplica::setMeshType(int mesh)
 	meshType = mesh;
 }
 
-int ABaseReplica::reset()
+void ABaseReplica::reset()
 {
 	sent = false;
+	currentTime = 0;
 }
 
 void ABaseReplica::sendMeshServer()
 {
-	rakNetManager->RPrpcSpawnType(GetActorLocation(), GetActorScale(),GetActorRotation().Quaternion(), ArrowComponent->GetForwardVector(), meshType);
+	FVector pos(GetActorLocation().X, GetActorLocation().Z, GetActorLocation().Y);
+	pos = pos / 50.0f;
+	rakNetManager->RPrpcSpawnType(pos, ArrowComponent->GetForwardVector(),GetActorRotation().Quaternion(),GetActorScale() , meshType);
 }

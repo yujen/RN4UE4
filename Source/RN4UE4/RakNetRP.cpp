@@ -186,11 +186,12 @@ void ARakNetRP::RPrpcSpawn(FVector pos, FVector dir)
 void ARakNetRP::RPrpcSpawnType(FVector pos, FVector dir, FQuat rot, FVector scale, int meshType)
 {
 	RakNet::BitStream testBs;
-	testBs.WriteVector<float>(pos.X, pos.Z, pos.Y);
-	testBs.WriteVector<float>(dir.X, dir.Y, dir.Z);
+	testBs.WriteVector<float>(pos.X, pos.Y, pos.Z);
+	testBs.WriteVector<float>(dir.X, dir.Z, dir.Y);
+	testBs.WriteVector<float>(scale.X, scale.Z, scale.Y);
 	testBs.WriteVector<float>(rot.X, rot.Y, rot.Z);
 	testBs.Write<float>(rot.W);
-	testBs.WriteVector<float>(scale.X, scale.Y, scale.Z);
+
 	testBs.Write<int>(meshType);
 	DataStructures::List<RakNet::SystemAddress> addresses;
 	DataStructures::List<RakNet::RakNetGUID> guids;
