@@ -66,6 +66,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "RakNet|RakNetRP")
 		void RPrpcSpawn(FVector pos, FVector dir);
 
+	UFUNCTION(BlueprintCallable, Category = "RakNet|RakNetRP")
+		void RPrpcSignalAllServers(const FString& sharedIdentifier);
+
 	UPROPERTY(EditDefaultsOnly, Category = "Object to spawn")
 		TSubclassOf<AReplica> objectToSpawn;
 
