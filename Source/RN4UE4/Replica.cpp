@@ -2,6 +2,7 @@
 
 #include "RN4UE4.h"
 #include "Replica.h"
+#include "PhysXIncludes.h" 
 
 DEFINE_LOG_CATEGORY(RakNet_Replica);
 
@@ -27,45 +28,48 @@ void AReplica::Tick(float DeltaTime)
 
 bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connection_RM3 *sourceConnection)
 {
-	constructionBitstream->Read(geom);
+	ReplicaRigidDynamic::DeserializeConstruction(constructionBitstream, sourceConnection);
+
 	FActorSpawnParameters Parameters = FActorSpawnParameters();
 	FTransform SpawnTransform = FTransform();
 	AStaticMeshActor* shape = nullptr;
 
+	physx::PxGeometryType::Enum geomType = static_cast<physx::PxGeometryType::Enum>(geom);
+
 	switch (geom)
 	{
-	case PxGeometryType::eSPHERE:
+	case physx::PxGeometryType::eSPHERE:
 	{
 		if (sphereBP == nullptr) break;
 
 		shape = sphereBP->GetDefaultObject<AStaticMeshActor>();
 	}
 		break;
-	case PxGeometryType::ePLANE:
+	case physx::PxGeometryType::ePLANE:
 		break;
-	case PxGeometryType::eCAPSULE:
+	case physx::PxGeometryType::eCAPSULE:
 	{
 		if (capsuleBP == nullptr) break;
 
 		shape = capsuleBP->GetDefaultObject<AStaticMeshActor>();
 	}
 		break;
-	case PxGeometryType::eBOX:
+	case physx::PxGeometryType::eBOX:
 	{
 		if (boxBP == nullptr) break;
 
 		shape = boxBP->GetDefaultObject<AStaticMeshActor>();
 	}
 		break;
-	case PxGeometryType::eCONVEXMESH:
+	case physx::PxGeometryType::eCONVEXMESH:
 		break;
-	case PxGeometryType::eTRIANGLEMESH:
+	case physx::PxGeometryType::eTRIANGLEMESH:
 		break;
-	case PxGeometryType::eHEIGHTFIELD:
+	case physx::PxGeometryType::eHEIGHTFIELD:
 		break;
-	case PxGeometryType::eGEOMETRY_COUNT:
+	case physx::PxGeometryType::eGEOMETRY_COUNT:
 		break;
-	case PxGeometryType::eINVALID:
+	case physx::PxGeometryType::eINVALID:
 		break;
 	default:
 		break;
@@ -82,13 +86,6 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 		visual->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
 	}
 
-	constructionBitstream->Read(posX);
-	constructionBitstream->Read(posY);
-	constructionBitstream->Read(posZ);
-	constructionBitstream->Read(rotX);
-	constructionBitstream->Read(rotY);
-	constructionBitstream->Read(rotZ);
-	constructionBitstream->Read(rotW);
 	UpdateTransform();
 
 	unsigned short port = sourceConnection->GetSystemAddress().GetPort();
@@ -134,12 +131,12 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 		SetMaterial(0, unknownMaterial);
 	}*/
 
-	return SampleReplica::DeserializeConstruction(constructionBitstream, sourceConnection);
+	return true;
 }
 
 void AReplica::Deserialize(DeserializeParameters *deserializeParameters)
 {
-	SampleReplica::Deserialize(deserializeParameters);
+	ReplicaRigidDynamic::Deserialize(deserializeParameters);
 	UpdateTransform();
 }
 

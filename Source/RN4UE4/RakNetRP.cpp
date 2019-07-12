@@ -4,6 +4,7 @@
 #include "RakNetRP.h"
 #include <functional>
 #include <string>
+#include "ReplicaRigidDynamic.h"
 using namespace std::placeholders;
 
 DEFINE_LOG_CATEGORY(RakNet_RakNetRP);
@@ -96,7 +97,7 @@ void ARakNetRP::Tick(float DeltaTime)
 			unsigned int idx;
 			for (idx = 0; idx < replicaListOut.Size(); idx++)
 			{
-				((SampleReplica*)replicaListOut[idx])->NotifyReplicaOfMessageDeliveryStatus(p->guid, msgNumber, p->data[0] == ID_SND_RECEIPT_ACKED);
+				static_cast<ReplicaBase*>(replicaListOut[idx])->NotifyReplicaOfMessageDeliveryStatus(p->guid, msgNumber, p->data[0] == ID_SND_RECEIPT_ACKED);
 			}
 		}
 		break;
@@ -180,8 +181,8 @@ void ARakNetRP::RPrpcSignalAllServers(const FString& sharedIdentifier)
 
 AReplica* ARakNetRP::GetObjectFromType(RakString typeName)
 {
-	if (typeName == "ServerCreated_ServerSerialized") {
-
+	if (typeName == "ReplicaRigidDynamic") 
+	{
 		if (objectToSpawn == nullptr)
 		{
 			UE_LOG(RakNet_RakNetRP, Error, TEXT("ARakNetRP::GetObjectFromType() objectToSpawn is null, no replica object created"));
