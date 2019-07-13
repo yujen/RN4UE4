@@ -4,7 +4,8 @@
 #include "RakNetRP.h"
 #include <functional>
 #include <string>
-#include "ReplicaRigidDynamic.h"
+#include "Include/ReplicaBase.h"
+
 using namespace std::placeholders;
 
 DEFINE_LOG_CATEGORY(RakNet_RakNetRP);

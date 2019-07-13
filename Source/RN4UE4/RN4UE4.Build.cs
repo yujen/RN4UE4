@@ -6,7 +6,7 @@ public class RN4UE4 : ModuleRules
 {
     public RN4UE4(ReadOnlyTargetRules Target) : base (Target)
     {
-        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "RakNet", "PhysX", "APEX" });
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "RakNet", "Replicas", "PhysX", "APEX" });
 
         PrivateDependencyModuleNames.AddRange(new string[] { "RakNet", });
 
@@ -16,15 +16,26 @@ public class RN4UE4 : ModuleRules
 
 		PrivateIncludePathModuleNames.AddRange(new string[] { "RakNet", });
 
-		// Uncomment if you are using Slate UI
-		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 
-		// Uncomment if you are using online features
-		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
+        PrivateDependencyModuleNames.AddRange(new string[] { "Replicas", });
 
-		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
+        PublicIncludePaths.AddRange(new string[] { "Replicas/Public" });
+        PublicIncludePaths.AddRange(new string[] { "Replicas/Include" });
 
-		MinFilesUsingPrecompiledHeaderOverride = 1;
-		bFasterWithoutUnity = true;
+        PrivateIncludePaths.AddRange(new string[] { "Replicas/Private" });
+		PrivateIncludePaths.AddRange(new string[] { "Replicas/Source" });
+
+        PrivateIncludePathModuleNames.AddRange(new string[] { "Replicas", });
+
+        // Uncomment if you are using Slate UI
+        // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
+
+        // Uncomment if you are using online features
+        // PrivateDependencyModuleNames.Add("OnlineSubsystem");
+
+        // To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
+
+        MinFilesUsingPrecompiledHeaderOverride = 1;
+		bFasterWithoutUnity = false;
 	}
 }

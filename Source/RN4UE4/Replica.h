@@ -15,7 +15,7 @@
 #include "Rand.h"
 
 #include "GameFramework/Actor.h"
-#include "ReplicaRigidDynamic.h"
+#include "Include/ReplicaRigidDynamic.h"
 #include "Replica.generated.h"
 
 
