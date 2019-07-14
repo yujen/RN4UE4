@@ -26,17 +26,15 @@ void AReplica::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connection_RM3 *sourceConnection)
+void AReplica::OnConstruction(const RigidDynamicConstructionData& data)
 {
-	ReplicaRigidDynamic::DeserializeConstruction(constructionBitstream, sourceConnection);
-
 	FActorSpawnParameters Parameters = FActorSpawnParameters();
 	FTransform SpawnTransform = FTransform();
 	AStaticMeshActor* shape = nullptr;
 
-	physx::PxGeometryType::Enum geomType = static_cast<physx::PxGeometryType::Enum>(geom);
+	physx::PxGeometryType::Enum geomType = static_cast<physx::PxGeometryType::Enum>(data.geom);
 
-	switch (geom)
+	switch (geomType)
 	{
 	case physx::PxGeometryType::eSPHERE:
 	{
@@ -86,52 +84,15 @@ bool AReplica::DeserializeConstruction(BitStream *constructionBitstream, Connect
 		visual->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
 	}
 
+	posX = data.posX;
+	posY = data.posY;
+	posZ = data.posZ;
+	rotX = data.rotX;
+	rotY = data.rotY;
+	rotZ = data.posZ;
+	rotW = data.rotW;
+
 	UpdateTransform();
-
-	unsigned short port = sourceConnection->GetSystemAddress().GetPort();
-	int rank = port - 12345;
-
-	switch (rank)
-	{
-	case 0:
-		SetMaterial(0, server0Material);
-		break;
-	case 1:
-		SetMaterial(0, server1Material);
-		break;
-	case 2:
-		SetMaterial(0, server2Material);
-		break;
-	case 3:
-		SetMaterial(0, server3Material);
-		break;
-	default:
-		SetMaterial(0, unknownMaterial);
-		break;
-	}
-
-	/*if (replicaManager->GetConnectionAtIndex(0) == sourceConnection)
-	{
-		SetMaterial(0, server0Material);
-	}
-	else if (replicaManager->GetConnectionCount() > 1 && replicaManager->GetConnectionAtIndex(1) == sourceConnection)
-	{
-		SetMaterial(0, server1Material);
-	}
-	else if (replicaManager->GetConnectionCount() > 2 && replicaManager->GetConnectionAtIndex(2) == sourceConnection)
-	{
-		SetMaterial(0, server2Material);
-	}
-	else if (replicaManager->GetConnectionCount() > 3 && replicaManager->GetConnectionAtIndex(3) == sourceConnection)
-	{
-		SetMaterial(0, server3Material);
-	}
-	else
-	{
-		SetMaterial(0, unknownMaterial);
-	}*/
-
-	return true;
 }
 
 void AReplica::Deserialize(DeserializeParameters *deserializeParameters)
@@ -182,5 +143,30 @@ void AReplica::SetMaterial(int32 elementIndex, UMaterialInterface* inMaterial)
 	{
 		UStaticMeshComponent* StaticMeshComponent = components[i];
 		StaticMeshComponent->SetMaterial(elementIndex, inMaterial);
+	}
+}
+
+void AReplica::PostDeserializeConstruction(RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *sourceConnection)
+{
+	unsigned short port = sourceConnection->GetSystemAddress().GetPort();
+	int rank = port - 12345;
+
+	switch (rank)
+	{
+	case 0:
+		SetMaterial(0, server0Material);
+		break;
+	case 1:
+		SetMaterial(0, server1Material);
+		break;
+	case 2:
+		SetMaterial(0, server2Material);
+		break;
+	case 3:
+		SetMaterial(0, server3Material);
+		break;
+	default:
+		SetMaterial(0, unknownMaterial);
+		break;
 	}
 }

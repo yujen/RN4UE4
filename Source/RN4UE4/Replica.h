@@ -38,6 +38,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
+	void OnConstruction(const RigidDynamicConstructionData& data);
+
 	UPROPERTY(EditDefaultsOnly, Category = "SphereBP")
 		TSubclassOf<AStaticMeshActor> sphereBP;
 
@@ -83,12 +85,14 @@ public:
 		Destroy();
 	}
 
-	virtual bool DeserializeConstruction(BitStream *constructionBitstream, Connection_RM3 *sourceConnection);
 	virtual void Deserialize(DeserializeParameters *deserializeParameters);
 	virtual bool DeserializeDestruction(BitStream *destructionBitstream, Connection_RM3 *sourceConnection);
 
 	void UpdateTransform();
 	void SetMaterial(int32 elementIndex, UMaterialInterface* inMaterial);
+
+
+	virtual void PostDeserializeConstruction(RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *sourceConnection) override;
 
 private:
 	AActor* visual = nullptr;
