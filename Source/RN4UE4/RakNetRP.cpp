@@ -33,6 +33,8 @@ ARakNetRP::ARakNetRP() : ReplicaManager3()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	initialised = false;
 }
 
 // Called when the game starts or when spawned
@@ -131,6 +133,8 @@ void ARakNetRP::RPStartup()
 	rakPeer->AttachPlugin(&rpc);
 
 	UE_LOG(RakNet_RakNetRP, Log, TEXT("ARakNetRP::RPStartup - plugin attached"));
+
+	initialised = true;
 }
 
 void ARakNetRP::RPDisconnect()
