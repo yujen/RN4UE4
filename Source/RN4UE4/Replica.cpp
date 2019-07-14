@@ -84,13 +84,8 @@ void AReplica::OnConstruction(const RigidDynamicConstructionData& data)
 		visual->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true));
 	}
 
-	posX = data.posX;
-	posY = data.posY;
-	posZ = data.posZ;
-	rotX = data.rotX;
-	rotY = data.rotY;
-	rotZ = data.posZ;
-	rotW = data.rotW;
+	pos = data.pos;
+	rot = data.rot;
 
 	UpdateTransform();
 }
@@ -121,10 +116,10 @@ void AReplica::UpdateTransform()
 	FMatrix conversionMatrix = FMatrix();
 	memcpy(conversionMatrix.M, matrixElements, 16 * sizeof(float));
 
-	FQuat	rot		= FQuat(rotX, rotY, rotZ, rotW);
-	FVector pos		= FVector(posX, posY, posZ) * 50.0f;
-	FVector scale	= FVector(-1, 1, 1);					// X will get negated, so set scale to -1, so final result is 1
-	FTransform transform = FTransform(FRotator(rot), pos, scale);
+	FQuat	newRot		= FQuat(rot.X, rot.Y, rot.Z, rot.W);
+	FVector newPos		= FVector(pos.X, pos.Y, pos.Z) * 50.0f;
+	FVector scale		= FVector(-1, 1, 1);					// X will get negated, so set scale to -1, so final result is 1
+	FTransform transform = FTransform(FRotator(newRot), newPos, scale);
 	transform *= FTransform(conversionMatrix);
 	SetActorTransform(transform, false, nullptr, ETeleportType::TeleportPhysics);
 }
