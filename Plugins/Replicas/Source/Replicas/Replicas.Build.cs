@@ -8,41 +8,9 @@ public class Replicas : ModuleRules
 	public Replicas(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
-		
-		PublicIncludePaths.AddRange(
-			new string[] {
-				"Replicas/Public",
-                "Replicas/Include"
-				// ... add public include paths required here ...
-			}
-			);
 
-        PrivateIncludePaths.AddRange(
-			new string[] {
-                "Replicas/Private",
-				"Replicas/Source"
-				// ... add other private include paths required here ...
-			}
-			);
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "RakNet" });
 
-
-        PublicDependencyModuleNames.AddRange(
-			new string[]
-			{
-				"Core",
-                "Projects",
-                "RakNet"
-				// ... add other public dependencies that you statically link with here ...
-			}
-			);
-			
-		
-		PrivateDependencyModuleNames.AddRange(
-			new string[]
-			{
-				"RakNet"
-				// ... add private dependencies that you statically link with here ...	
-			}
-			);
+		PublicIncludePaths.Add(Path.GetFullPath(Path.Combine(ModuleDirectory, "../../../../PhysX-3.4/PhysX_3.4/Samples/Replicas/Include")));
 	}
 }

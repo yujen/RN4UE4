@@ -20,10 +20,15 @@
 			"LoadingPhase": "Default"
 		}
 	],
-  "Plugins": [
-    {
-      "Name": "RakNet",
-      "Enabled": true
-    }
-  ]  
+	"Plugins": [
+		{
+			"Name": "RakNet",
+			"Enabled": true
+		}
+	],
+	"PreBuildSteps": {
+		"Win64": [
+			"xcopy $(ProjectDir)\\PhysX-3.4\\PhysX_3.4\\Samples\\Replicas\\Source $(ProjectDir)\\Plugins\\Replicas\\Source\\Replicas\\Source /e /i /y"
+		]
+	}
 }

@@ -4,7 +4,7 @@
 #include "RakNetRP.h"
 #include <functional>
 #include <string>
-#include "Include/ReplicaBase.h"
+#include "ReplicaBase.h"
 
 using namespace std::placeholders;
 

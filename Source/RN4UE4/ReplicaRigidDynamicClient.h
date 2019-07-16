@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Include/ReplicaRigidDynamic.h"
+#include "ReplicaRigidDynamic.h"
 #include "RakNetRP.h"
 #include "ReplicaRigidDynamicClient.generated.h"
 
