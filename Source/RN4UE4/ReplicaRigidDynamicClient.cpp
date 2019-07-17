@@ -84,6 +84,7 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 			FVector ext;
 			FBoxSphereBounds sph;
 			FTransform tr;
+			data.geom = 3;
 			GetOwner()->SetActorRotation(FQuat(0, 0, 0, 1));
 			vismesh->GetStaticMeshComponent()->GetBodySetup()->AggGeom.CalcBoxSphereBounds(sph, tr);
 			ext = sph.BoxExtent;
@@ -99,6 +100,7 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 			float radius;
 			FBoxSphereBounds sph;
 			FTransform tr;
+			data.geom = 0;
 			vismesh->GetStaticMeshComponent()->GetBodySetup()->AggGeom.CalcBoxSphereBounds(sph, tr);
 			float radius;
 			radius = sph.SphereRadius;
@@ -113,6 +115,7 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 			FBoxSphereBounds sph;
 			FTransform tr;
 			float radius;
+			data.geom = 2;
 			GetOwner()->SetActorRotation(FQuat(0, 0, 0, 1));
 			vismesh->GetStaticMeshComponent()->GetBodySetup()->AggGeom.CalcBoxSphereBounds(sph, tr);
 			ext = sph.BoxExtent;
@@ -124,6 +127,7 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 		}
 		//if mesh
 		else if (typeMesh == 3) {
+			data.geom = 4;
 			for (FVector vec : vismesh->GetStaticMeshComponent()->GetBodySetup()->AggGeom.ConvexElems[0].VertexData)
 			{
 				FVector aux = vismesh->GetTransform().TransformPosition(vec);
@@ -151,7 +155,8 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 		PxCombineMode::Enum frictionCombineMode = vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->getFrictionCombineMode();
 		int frictionCombineModeInt;
 		data.referenceCount = vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->getReferenceCount();
-	//	PxMaterialFlags flags = vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->getFlags();
+		//PxFlags<PxMaterialFlag::Enum, PxU16> flags = vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->getFlags();
+		vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->get
 		if (restituCombineMode == PxCombineMode::eAVERAGE)
 			data.restitutionCombineMode = 0;
 		else if (restituCombineMode == PxCombineMode::eMIN)
