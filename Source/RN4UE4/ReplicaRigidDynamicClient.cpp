@@ -137,6 +137,7 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 		}
 		//if mesh
 		else if (typeMesh == 4) {
+			data.numVertex = vismesh->GetStaticMeshComponent()->GetBodySetup()->AggGeom.ConvexElems[0].VertexData.Num();
 			for (FVector vec : vismesh->GetStaticMeshComponent()->GetBodySetup()->AggGeom.ConvexElems[0].VertexData)
 			{
 				FVector aux = vismesh->GetTransform().TransformPosition(vec);
