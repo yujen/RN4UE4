@@ -82,8 +82,8 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 	AStaticMeshActor * vismesh = dynamic_cast<AStaticMeshActor*>(GetOwner());
 	if (vismesh != nullptr) {
 		data.sca.X = vismesh->GetActorScale().X;
-		data.sca.Y = vismesh->GetActorScale().Y;
-		data.sca.Z = vismesh->GetActorScale().Z;
+		data.sca.Y = vismesh->GetActorScale().Z;
+		data.sca.Z = vismesh->GetActorScale().Y;
 		data.forwardVector.X = vismesh->GetActorForwardVector().X;
 		data.forwardVector.Y = vismesh->GetActorForwardVector().Y;
 		data.forwardVector.Z = vismesh->GetActorForwardVector().Z;
@@ -104,8 +104,8 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 			GetOwner()->SetActorRotation(FQuat(0, 0, 0, 1));
 			sph = vismesh->GetStaticMeshComponent()->CalcBounds(tr);
 			data.extents.X = sph.BoxExtent.X;
-			data.extents.Y = sph.BoxExtent.Y;
-			data.extents.Z = sph.BoxExtent.Z;
+			data.extents.Y = sph.BoxExtent.Z;
+			data.extents.Z = sph.BoxExtent.Y;
 			GetOwner()->SetActorRotation(rotAux);
 		}
 
@@ -143,16 +143,16 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 				aux = aux / 50.0f;
 				Vec3 ver;
 				ver.X = aux.X;
-				ver.Y = aux.Y;
-				ver.Z = aux.Z;
+				ver.Y = aux.Z;
+				ver.Z = aux.Y;
 				data.vertexData.push_back(ver);
 			}
 		}
 
 		FVector centerMass = vismesh->GetStaticMeshComponent()->GetCenterOfMass();
 		data.centerMass.X = centerMass.X;
-		data.centerMass.Y = centerMass.Y;
-		data.centerMass.Z = centerMass.Z;
+		data.centerMass.Y = centerMass.Z;
+		data.centerMass.Z = centerMass.Y;
 		data.MaxAngularVelocity = vismesh->GetStaticMeshComponent()->GetBodyInstance()->MaxAngularVelocity;
 		data.typeName = vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->getConcreteTypeName();
 		data.restitution = vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->getRestitution();
