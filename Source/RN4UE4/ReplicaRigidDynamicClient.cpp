@@ -17,7 +17,7 @@ void UReplicaRigidDynamicClient::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ensureMsgf(rakNetManager, TEXT("Unexpected null rakNetManager!"));
+	//ensureMsgf(rakNetManager, TEXT("Unexpected null rakNetManager!"));
 
 	registered = false;
 }
@@ -25,12 +25,29 @@ void UReplicaRigidDynamicClient::BeginPlay()
 void UReplicaRigidDynamicClient::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	if (!registered && ensure(rakNetManager) && rakNetManager->GetInitialised())
+	if (rakNetManager != nullptr)
 	{
-		rakNetManager->Reference(this);
-		registered = true;
+		if (!registered && rakNetManager!=nullptr && rakNetManager->GetInitialised())
+		{
+			rakNetManager->Reference(this);
+			registered = true;
+		}
 	}
+	else
+	{
+		for (TActorIterator<ARakNetRP> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+		{
+			// Same as with the Object Iterator, access the subclass instance with the * or -> operators.
+			if (*ActorItr != nullptr)
+			{
+				ARakNetRP *rak = *ActorItr;
+				rakNetManager = rak;
+				break;
+			}
+
+		}
+	}
+
 }
 
 RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
@@ -52,18 +69,18 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 	actorTransform.ScaleTranslation(1 / 50.0f);
 
 	RigidDynamicConstructionData data;
-	data.geom = 0;
-	data.pos.X = -actorTransform.GetLocation().X;
-	data.pos.Y = actorTransform.GetLocation().Y;
-	data.pos.Z = actorTransform.GetLocation().Z;
+	data.geom = typeMesh;
+	FVector posi = actorTransform.GetLocation();
+	posi = posi / 50.0f;
+	data.pos.X = posi.X;
+	data.pos.Y = posi.Z;
+	data.pos.Z = posi.Y;
 	data.rot.X = actorTransform.GetRotation().X;
 	data.rot.Y = actorTransform.GetRotation().Y;
 	data.rot.Z = actorTransform.GetRotation().Z;
 	data.rot.W = actorTransform.GetRotation().W;
-
 	AStaticMeshActor * vismesh = dynamic_cast<AStaticMeshActor*>(GetOwner());
 	if (vismesh != nullptr) {
-		data.typeMesh = typeMesh;
 		data.sca.X = vismesh->GetActorScale().X;
 		data.sca.Y = vismesh->GetActorScale().Y;
 		data.sca.Z = vismesh->GetActorScale().Z;
@@ -79,30 +96,25 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 		data.gravityEnabled = vismesh->GetStaticMeshComponent()->IsGravityEnabled();
 
 		//if box
-		if (typeMesh == 0) {
+		if (typeMesh == 3) {
 			FRotator rotAux = GetOwner()->GetActorRotation();
 			FVector ext;
 			FBoxSphereBounds sph;
 			FTransform tr;
-			data.geom = 3;
 			GetOwner()->SetActorRotation(FQuat(0, 0, 0, 1));
-			vismesh->GetStaticMeshComponent()->GetBodySetup()->AggGeom.CalcBoxSphereBounds(sph, tr);
-			ext = sph.BoxExtent;
-			ext = ext * 0.5;
-			data.extents.X = ext.X;
-			data.extents.Y = ext.Y;
-			data.extents.Z = ext.Z;
+			sph = vismesh->GetStaticMeshComponent()->CalcBounds(tr);
+			data.extents.X = sph.BoxExtent.X;
+			data.extents.Y = sph.BoxExtent.Y;
+			data.extents.Z = sph.BoxExtent.Z;
 			GetOwner()->SetActorRotation(rotAux);
 		}
 
 		//if sphere
-		else if (typeMesh == 1) {
+		else if (typeMesh == 0) {
 			float radius;
 			FBoxSphereBounds sph;
 			FTransform tr;
-			data.geom = 0;
 			vismesh->GetStaticMeshComponent()->GetBodySetup()->AggGeom.CalcBoxSphereBounds(sph, tr);
-			float radius;
 			radius = sph.SphereRadius;
 			data.extents.X = radius;
 			data.extents.Y = 0.0f;
@@ -114,8 +126,6 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 			FVector ext;
 			FBoxSphereBounds sph;
 			FTransform tr;
-			float radius;
-			data.geom = 2;
 			GetOwner()->SetActorRotation(FQuat(0, 0, 0, 1));
 			vismesh->GetStaticMeshComponent()->GetBodySetup()->AggGeom.CalcBoxSphereBounds(sph, tr);
 			ext = sph.BoxExtent;
@@ -126,8 +136,7 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 			GetOwner()->SetActorRotation(rotAux);
 		}
 		//if mesh
-		else if (typeMesh == 3) {
-			data.geom = 4;
+		else if (typeMesh == 4) {
 			for (FVector vec : vismesh->GetStaticMeshComponent()->GetBodySetup()->AggGeom.ConvexElems[0].VertexData)
 			{
 				FVector aux = vismesh->GetTransform().TransformPosition(vec);
@@ -141,7 +150,6 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 		}
 
 		FVector centerMass = vismesh->GetStaticMeshComponent()->GetCenterOfMass();
-		centerMass = centerMass / 50.0f;
 		data.centerMass.X = centerMass.X;
 		data.centerMass.Y = centerMass.Y;
 		data.centerMass.Z = centerMass.Z;
@@ -149,14 +157,11 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 		data.typeName = vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->getConcreteTypeName();
 		data.restitution = vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->getRestitution();
 		PxCombineMode::Enum restituCombineMode = vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->getRestitutionCombineMode();
-		int restitutionCombineMode;
 		data.dynamicFriction = vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->getDynamicFriction();
 		data.staticFriction = vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->getStaticFriction();
 		PxCombineMode::Enum frictionCombineMode = vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->getFrictionCombineMode();
-		int frictionCombineModeInt;
 		data.referenceCount = vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->getReferenceCount();
 		//PxFlags<PxMaterialFlag::Enum, PxU16> flags = vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->getFlags();
-		vismesh->GetStaticMeshComponent()->GetBodySetup()->GetPhysMaterial()->GetPhysXMaterial()->get
 		if (restituCombineMode == PxCombineMode::eAVERAGE)
 			data.restitutionCombineMode = 0;
 		else if (restituCombineMode == PxCombineMode::eMIN)

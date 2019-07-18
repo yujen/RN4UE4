@@ -20,7 +20,8 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Raknet")
 		ARakNetRP*		rakNetManager;
-
+	UPROPERTY(EditAnywhere, Category = "Raknet")
+		int				typeMesh;
 	virtual RakString GetName() const { return RakString("ReplicaRigidDynamic"); }
 	virtual RM3SerializationResult Serialize(SerializeParameters *serializeParameters)
 	{
@@ -54,5 +55,5 @@ protected:
 
 private:
 	bool registered;
-	int typeMesh;
+
 };
