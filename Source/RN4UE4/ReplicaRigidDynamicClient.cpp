@@ -140,8 +140,7 @@ RigidDynamicConstructionData UReplicaRigidDynamicClient::GetConstructionData()
 			data.numVertex = vismesh->GetStaticMeshComponent()->GetBodySetup()->AggGeom.ConvexElems[0].VertexData.Num();
 			for (FVector vec : vismesh->GetStaticMeshComponent()->GetBodySetup()->AggGeom.ConvexElems[0].VertexData)
 			{
-				FVector aux = vismesh->GetTransform().TransformPosition(vec);
-				aux = aux / 50.0f;
+				FVector aux = vec / 50.0f;
 				Vec3 ver;
 				ver.X = aux.X;
 				ver.Y = aux.Z;
